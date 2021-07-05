@@ -13,7 +13,7 @@ namespace Frontend_PI.Controllers
     {
 
         // GET: User
-        public ActionResult Index()
+        public ActionResult Index() 
         {
             var tokenResponse = httpClient.GetAsync(baseAddress + " products ").Result;
             if (tokenResponse.IsSuccessStatusCode)
