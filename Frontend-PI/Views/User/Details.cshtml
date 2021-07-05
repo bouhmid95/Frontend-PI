@@ -1,0 +1,114 @@
+﻿@model Frontend_PI.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>User</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.firstName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.firstName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.lastName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.lastName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.email)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.email)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.username)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.username)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.password)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.password)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.confirmCode)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.confirmCode)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.confirmed)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.confirmed)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.wrongPassword)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.wrongPassword)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.blocked)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.blocked)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.blockedDate)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.blockedDate)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.banned)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.banned)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
