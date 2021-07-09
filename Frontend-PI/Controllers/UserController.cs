@@ -25,32 +25,33 @@ namespace Frontend_PI.Controllers
         // GET: User
         public ActionResult Index()
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/4").Result;
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
-                return View(ViewBag.result);
-            }
             return View();
         }
 
         // GET: User/Details/5
-        public ActionResult Details()
+        public ActionResult Details(int id)
         {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findUser/10");
 
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/4").Result;
-            if (responseMessage.IsSuccessStatusCode)
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
             {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<User>().Result;
                 return View(ViewBag.result);
             }
             return View();
+
+       
+          /*  HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+            }
+            return View();*/
 
         }
 
@@ -69,12 +70,97 @@ namespace Frontend_PI.Controllers
             {
                 var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "addUser/",
                 user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                return RedirectToAction("Index");
+                return RedirectToAction("ConfirmUser");
             }
             catch
             {
                 return View();
             }
+        }
+
+        // POST: User/ConfirmUser
+        public ActionResult ConfirmUser(User user)
+        {
+            if (user.username != null && user.confirmCode != null) { 
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "confirmUser/",
+                    user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    return RedirectToAction("LoginUser");
+                }
+                catch
+                {
+                    return View();
+                } 
+             }
+            return View();
+
+        }
+
+        // POST: User/LoginUser
+        public ActionResult LoginUser(User user)
+        {
+            if (user.username != null && user.password != null)
+            {
+
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "loginUser/",
+                    user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    return RedirectToAction("Index");
+
+                }
+                catch
+                {
+                    return View();
+                } 
+            }
+            return View();
+
+        }
+
+
+
+        // POST: User/ResetPassword
+        public ActionResult ResetPassword(User user)
+        {
+            if (user.username != null )
+            {
+                try
+                {
+                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username="+username
+                    ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    return RedirectToAction("UpdatePassword");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+
+        }
+
+
+
+        // POST: User/UpdatePassword
+        public ActionResult UpdatePassword(User user)
+        {
+            if (user.username != null && user.password !=null && user.confirmCode!=null)
+            {
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updatePassword/",
+                             user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+
         }
 
         // GET: User/Edit/5
@@ -102,7 +188,16 @@ namespace Frontend_PI.Controllers
         // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            try
+            {
+                var APIResponse = httpClient.DeleteAsync(baseAddress + "deleteUser/"+ id
+                ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                return RedirectToAction("LoginUser");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // POST: User/Delete/5
