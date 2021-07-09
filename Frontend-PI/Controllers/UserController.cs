@@ -128,7 +128,7 @@ namespace Frontend_PI.Controllers
             {
                 try
                 {
-                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username="+username
+                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username="+ user.username
                     ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                     return RedirectToAction("UpdatePassword");
                 }
