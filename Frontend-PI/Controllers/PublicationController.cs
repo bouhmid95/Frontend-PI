@@ -91,18 +91,33 @@ namespace Frontend_PI.Controllers
         // GET: Publication/Edit/5
         public ActionResult Edit(int id)
         {
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findPublication/" + id).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<Publication>().Result;
+                Console.WriteLine(ViewBag.result);
+                return View(ViewBag.result);
+            }
             return View();
         }
 
+
         // POST: Publication/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Publication publication)
         {
             try
             {
-                // TODO: Add update logic here
+                var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "updatePublication/",
+                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+
+
 
                 return RedirectToAction("Index");
+
+
             }
             catch
             {
