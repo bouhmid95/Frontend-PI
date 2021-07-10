@@ -105,9 +105,25 @@ namespace Frontend_PI.Controllers
 
                 try
                 {
-                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "loginUser/",
-                    user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                    return RedirectToAction("Index");
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "loginUser",
+                    user);
+                        
+                        //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+
+
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        Session["Id"] = newUser.id;
+                        Session["FirstName"] = newUser.firstName;
+                        Session["LastName"] = newUser.lastName;
+                        Session["Username"] = newUser.username;
+                        Session["UserRole"] = newUser.userRole;
+                        return RedirectToAction("Index", "Home");
+                    }
+
+
+
 
                 }
                 catch
@@ -117,6 +133,16 @@ namespace Frontend_PI.Controllers
             }
             return View();
 
+        }
+
+
+        // POST: User/LogoutUser
+        public ActionResult LogoutUser()
+        {
+            Session["Username"] = null;
+            Session["Password"] = null;
+            Session["UserRole"] = null;
+            return RedirectToAction("Index", "Home");
         }
 
 
