@@ -145,8 +145,10 @@ namespace Frontend_PI.Controllers
         // POST: User/LogoutUser
         public ActionResult LogoutUser()
         {
+            Session["Id"] = null;
+            Session["FirstName"] = null;
+            Session["LastName"] = null;
             Session["Username"] = null;
-            Session["Password"] = null;
             Session["UserRole"] = null;
             return RedirectToAction("Index", "Home");
         }
