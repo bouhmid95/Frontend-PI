@@ -53,6 +53,16 @@ namespace Frontend_PI.Controllers
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri("http://localhost:8081");
                 var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+
+                List<Commande> commandes = new List<Commande>();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
+                    commandes = ViewBag.result;
+                    return RedirectToAction("Index");
+                }
                 return RedirectToAction("Index");
             }
             catch
@@ -64,7 +74,12 @@ namespace Frontend_PI.Controllers
         // GET: Commande/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findOrderById/" + id).Result;
+            ViewBag.result = responseMessage.Content.ReadAsAsync<Commande>().Result;
+            return View(ViewBag.result);
         }
 
         // POST: Commande/Edit/5
@@ -86,7 +101,16 @@ namespace Frontend_PI.Controllers
         // GET: Commande/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DeleteAsync("SpringMVC/servlet/deleteOrder/" + id);
+
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findOrderById/" + id).Result;
+            ViewBag.result = responseMessage.Content.ReadAsAsync<Commande>().Result;
+
+            return View(ViewBag.result);
         }
 
         // POST: Commande/Delete/5
