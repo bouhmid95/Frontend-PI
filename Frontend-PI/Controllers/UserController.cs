@@ -19,8 +19,8 @@ namespace Frontend_PI.Controllers
             httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(baseAddress);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
-            //var _AccessToken = Session[" AccessToken "];
-           // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
+                                                                                                                 //var _AccessToken = Session[" AccessToken "];
+                                                                                                                 // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
         }
         // GET: User
         public ActionResult Index()
@@ -42,16 +42,16 @@ namespace Frontend_PI.Controllers
             }
             return View();
 
-       
-          /*  HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
-            }
-            return View();*/
+
+            /*  HttpClient httpClient = new HttpClient();
+              httpClient.BaseAddress = new Uri("http://localhost:8081");
+              httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+              HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
+              if (responseMessage.IsSuccessStatusCode)
+              {
+                  ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+              }
+              return View();*/
 
         }
 
@@ -81,20 +81,32 @@ namespace Frontend_PI.Controllers
         // POST: User/ConfirmUser
         public ActionResult ConfirmUser(User user)
         {
-            if (user.username != null && user.confirmCode != null) { 
+            if (user.username != null && user.confirmCode != null)
+            {
                 try
                 {
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "confirmUser/",
-                    user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                    return RedirectToAction("LoginUser");
+                    user);
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
                 }
                 catch
                 {
                     return View();
-                } 
-             }
+                }
+            }
             return View();
-
         }
 
         // POST: User/LoginUser
@@ -102,15 +114,11 @@ namespace Frontend_PI.Controllers
         {
             if (user.username != null && user.password != null)
             {
-
                 try
                 {
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "loginUser",
                     user);
-                        
-                        //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-
-
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                     if (APIResponse.Result.IsSuccessStatusCode)
                     {
                         User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
@@ -123,22 +131,18 @@ namespace Frontend_PI.Controllers
                             Session["UserRole"] = newUser.userRole;
                             return RedirectToAction("Index", "Home");
                         }
-                        else {
+                        else
+                        {
                             return View("Lockout");
                         }
                     }
-
-
-
-
                 }
                 catch
                 {
                     return View();
-                } 
+                }
             }
             return View();
-
         }
 
 
@@ -158,13 +162,25 @@ namespace Frontend_PI.Controllers
         // POST: User/ResetPassword
         public ActionResult ResetPassword(User user)
         {
-            if (user.username != null )
+            if (user.username != null)
             {
                 try
                 {
-                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username="+ user.username
-                    ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                    return RedirectToAction("UpdatePassword");
+                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username=" + user.username
+                    );
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("UpdatePassword");
+                        }
+                        else
+                        {
+                            return View("Lockout");
+                        }
+                    }
                 }
                 catch
                 {
@@ -172,21 +188,32 @@ namespace Frontend_PI.Controllers
                 }
             }
             return View();
-
         }
-
 
 
         // POST: User/UpdatePassword
         public ActionResult UpdatePassword(User user)
         {
-            if (user.username != null && user.password !=null && user.confirmCode!=null)
+            if (user.username != null && user.password != null && user.confirmCode != null)
             {
                 try
                 {
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updatePassword/",
-                             user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                    return RedirectToAction("LoginUser");
+                             user);
+
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Lockout");
+                        }
+                    }
                 }
                 catch
                 {
@@ -198,25 +225,52 @@ namespace Frontend_PI.Controllers
         }
 
         // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        /* public ActionResult Edit(int id)
+         {
+
+             return View();
+         }*/
+
+        // POST: User/UpdateUser
+        public ActionResult UpdateUser(User user)
         {
+
+
+            if (user!=null && user.username != null)
+            {
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updateUser/",
+                    user);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                user = getUser(16);
+                if (user != null)
+                {
+                    user.password = null;
+                    return View(user);
+                }
+
+            }
             return View();
-        }
-
-        // POST: User/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: User/Delete/5
@@ -224,7 +278,7 @@ namespace Frontend_PI.Controllers
         {
             try
             {
-                var APIResponse = httpClient.DeleteAsync(baseAddress + "deleteUser/"+ id
+                var APIResponse = httpClient.DeleteAsync(baseAddress + "deleteUser/" + id
                 ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("LoginUser");
             }
@@ -249,5 +303,35 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+        public User getUser(int idUser)
+        {
+
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findUser/" + idUser);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                    if (newUser != null)
+                    {
+                        return newUser;
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            return null;
+
+
+        }
     }
+
+
+
+
 }
