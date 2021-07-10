@@ -114,12 +114,18 @@ namespace Frontend_PI.Controllers
                     if (APIResponse.Result.IsSuccessStatusCode)
                     {
                         User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
-                        Session["Id"] = newUser.id;
-                        Session["FirstName"] = newUser.firstName;
-                        Session["LastName"] = newUser.lastName;
-                        Session["Username"] = newUser.username;
-                        Session["UserRole"] = newUser.userRole;
-                        return RedirectToAction("Index", "Home");
+                        if (newUser != null)
+                        {
+                            Session["Id"] = newUser.id;
+                            Session["FirstName"] = newUser.firstName;
+                            Session["LastName"] = newUser.lastName;
+                            Session["Username"] = newUser.username;
+                            Session["UserRole"] = newUser.userRole;
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else {
+                            return View("Lockout");
+                        }
                     }
 
 
@@ -139,8 +145,10 @@ namespace Frontend_PI.Controllers
         // POST: User/LogoutUser
         public ActionResult LogoutUser()
         {
+            Session["Id"] = null;
+            Session["FirstName"] = null;
+            Session["LastName"] = null;
             Session["Username"] = null;
-            Session["Password"] = null;
             Session["UserRole"] = null;
             return RedirectToAction("Index", "Home");
         }
@@ -178,7 +186,7 @@ namespace Frontend_PI.Controllers
                 {
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updatePassword/",
                              user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                    return RedirectToAction("Index");
+                    return RedirectToAction("LoginUser");
                 }
                 catch
                 {
