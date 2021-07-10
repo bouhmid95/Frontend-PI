@@ -28,7 +28,7 @@ namespace Frontend_PI.Controllers
         // GET: Publication
         public ActionResult Index()
         {
-            var APIResponse = httpClient.GetAsync(baseAddress + "findAllpublications");
+            var APIResponse = httpClient.GetAsync(baseAddress + "findValidatedPublications");
 
             //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
@@ -43,7 +43,27 @@ namespace Frontend_PI.Controllers
         // GET: Publication/Details/5
         public ActionResult Details(int id)
         {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                return View(ViewBag.result);
+            }
             return View();
+
+
+            /*  HttpClient httpClient = new HttpClient();
+              httpClient.BaseAddress = new Uri("http://localhost:8081");
+              httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+              HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
+              if (responseMessage.IsSuccessStatusCode)
+              {
+                  ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+              }
+              return View();*/
         }
 
         // GET: Publication/Create
@@ -54,12 +74,12 @@ namespace Frontend_PI.Controllers
 
         // POST: Publication/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Publication publication)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "addPublication/",
+                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");
             }
             catch
@@ -102,8 +122,8 @@ namespace Frontend_PI.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
+                var APIResponse = httpClient.DeleteAsync(baseAddress + "deletePublication/" + id
+                ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");
             }
             catch
