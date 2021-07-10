@@ -14,6 +14,7 @@ namespace Frontend_PI.Models
         public int nbDisLike { get; set; }
         public bool validated { get; set; }
         public string image { get; set; }
+        public string title { get; set; }
         public User user { get; set; }
 
     }
