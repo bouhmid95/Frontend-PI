@@ -1,4 +1,5 @@
 ﻿using Frontend_PI.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,18 @@ namespace Frontend_PI.Controllers
                                                                                                                  // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
         }
         // GET: User
+        // GET: Home
         public ActionResult Index()
         {
+            List<LockUnlockUser> lockUnlockUsers = new List<LockUnlockUser>();
+
+            lockUnlockUsers.Add(new LockUnlockUser("unblocked users", 60));
+            lockUnlockUsers.Add(new LockUnlockUser("blocked users", 40));
+
+          
+
+            ViewBag.DataPoints = JsonConvert.SerializeObject(lockUnlockUsers);
+
             return View();
         }
 
@@ -133,7 +144,7 @@ namespace Frontend_PI.Controllers
                         }
                         else
                         {
-                            return View("Lockout");
+                            return View("LoginFailed");
                         }
                     }
                 }
@@ -149,6 +160,7 @@ namespace Frontend_PI.Controllers
         // POST: User/LogoutUser
         public ActionResult LogoutUser()
         {
+           
             Session["Id"] = null;
             Session["FirstName"] = null;
             Session["LastName"] = null;
@@ -178,7 +190,7 @@ namespace Frontend_PI.Controllers
                         }
                         else
                         {
-                            return View("Lockout");
+                            return View("LoginFailed");
                         }
                     }
                 }
@@ -211,7 +223,7 @@ namespace Frontend_PI.Controllers
                         }
                         else
                         {
-                            return View("Lockout");
+                            return View("LoginFailed");
                         }
                     }
                 }
@@ -234,12 +246,15 @@ namespace Frontend_PI.Controllers
         // POST: User/UpdateUser
         public ActionResult UpdateUser(User user)
         {
-
+            if (Session["Id"] == null)
+                return View();
 
             if (user!=null && user.username != null)
             {
                 try
                 {
+                    user.id = Int16.Parse(Session["Id"].ToString());
+
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updateUser/",
                     user);
                     if (APIResponse.Result.IsSuccessStatusCode)
@@ -262,7 +277,7 @@ namespace Frontend_PI.Controllers
             }
             else
             {
-                user = getUser(16);
+                user = getUser(Int16.Parse(Session["Id"].ToString()));
                 if (user != null)
                 {
                     user.password = null;
