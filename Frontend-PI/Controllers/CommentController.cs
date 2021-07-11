@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
 using Frontend_PI.Models;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace Frontend_PI.Controllers
 {
-    public class PublicationController : Controller
-
-
+    public class CommentController : Controller
     {
+
 
         HttpClient httpClient;
         string baseAddress;
-        public PublicationController()
+        public CommentController()
         {
             baseAddress = "http://localhost:8081/SpringMVC/servlet/";
             httpClient = new HttpClient();
@@ -25,31 +24,31 @@ namespace Frontend_PI.Controllers
                                                                                                                  //var _AccessToken = Session[" AccessToken "];
                                                                                                                  // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
         }
-        // GET: Publication
+        // GET: Comment
         public ActionResult Index()
         {
-            var APIResponse = httpClient.GetAsync(baseAddress + "findValidatedPublications");
+            var APIResponse = httpClient.GetAsync(baseAddress + "findAllComments");
 
             //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
             if (APIResponse.Result.IsSuccessStatusCode)
             {
-                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<Publication>>().Result;
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
                 return View(ViewBag.result);
             }
             return View();
         }
 
-        // GET: Publication/Details/5
+        // GET: Comment/Details/5
         public ActionResult Details(int id)
         {
-            var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+            var APIResponse = httpClient.GetAsync(baseAddress + "findComment/" + id);
 
             //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
             if (APIResponse.Result.IsSuccessStatusCode)
             {
-                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Comment>().Result;
                 return View(ViewBag.result);
             }
             return View();
@@ -66,20 +65,20 @@ namespace Frontend_PI.Controllers
               return View();*/
         }
 
-        // GET: Publication/Create
+        // GET: Comment/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Publication/Create
+        // POST: Comment/Create
         [HttpPost]
-        public ActionResult Create(Publication publication)
+        public ActionResult Create(Comment comment)
         {
             try
             {
-                var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "addPublication/",
-                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                var APIResponse = httpClient.PostAsJsonAsync<Comment>(baseAddress + "addComment/",
+                comment).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");
             }
             catch
@@ -88,30 +87,29 @@ namespace Frontend_PI.Controllers
             }
         }
 
-        // GET: Publication/Edit/5
+        // GET: Comment/Edit/5
         public ActionResult Edit(int id)
         {
             httpClient.BaseAddress = new Uri("http://localhost:8081");
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findPublication/" + id).Result;
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findComment/" + id).Result;
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<Publication>().Result;
+                ViewBag.result = responseMessage.Content.ReadAsAsync<Comment>().Result;
                 Console.WriteLine(ViewBag.result);
                 return View(ViewBag.result);
             }
             return View();
         }
 
-
-        // POST: Publication/Edit/5
+        // POST: Comment/Edit/5
         [HttpPost]
-        public ActionResult Edit(Publication publication)
+        public ActionResult Edit(Comment comment)
         {
             try
             {
-                var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "updatePublication/",
-                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                var APIResponse = httpClient.PostAsJsonAsync<Comment>(baseAddress + "updateComment/",
+                comment).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 
 
 
@@ -125,19 +123,19 @@ namespace Frontend_PI.Controllers
             }
         }
 
-        // GET: Publication/Delete/5
+        // GET: Comment/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Publication/Delete/5
+        // POST: Comment/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
             {
-                var APIResponse = httpClient.DeleteAsync(baseAddress + "deletePublication/" + id
+                var APIResponse = httpClient.DeleteAsync(baseAddress + "deleteComment/" + id
                 ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");
             }

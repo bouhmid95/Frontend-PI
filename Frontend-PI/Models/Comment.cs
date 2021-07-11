@@ -5,17 +5,12 @@ using System.Web;
 
 namespace Frontend_PI.Models
 {
-    public class Publication
+    public class Comment
     {
         public int id { get; set; }
         public string content { get; set; }
         public DateTime publicationDate { get; set; }
-        public int nbLike { get; set; }
-        public int nbDisLike { get; set; }
-        public bool validated { get; set; }
-        public string image { get; set; }
-        public string title { get; set; }
+        public Publication publication { get; set; }
         public User user { get; set; }
-
     }
 }

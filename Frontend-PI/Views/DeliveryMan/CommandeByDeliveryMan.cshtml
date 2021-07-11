@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Frontend_PI.Models.Commande>
+
+
+@{
+    ViewBag.Title = "CommandeByDeliveryMan";
+}
+
+
+<span><h2>liste des commandes  <h5>@ViewBag.stat.first_name</h5> </h2></span>
+
+
+
+    <p>
+        @Html.ActionLink("Affecter des commande !", "Create")
+    </p>
+    @if (Model != null)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.reference)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.orderDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.typePaiement)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.adresse)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.codePostal)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.reference)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.orderDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.typePaiement)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.adresse)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.codePostal)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+        <h3 style="text-decoration:underline;color:darkolivegreen">Statistique de livreur</h3>
+        <table class="table">
+            <tr>
+                <th>
+                    Nombre de commande affectées
+                </th>
+                <th>
+                    Nombre de commande livrées
+                </th>
+
+
+
+            </tr>
+
+
+            <tr>
+                <td>
+                    @ViewBag.stat.total_orders
+                </td>
+                <td>
+                    @ViewBag.stat.orders_delivered
+                </td>
+
+
+            </tr>
+
+
+        </table>
+
+    }
+
+    @if (Model == null)
+    {
+        <p> ce livreur n'a pas encore des livraisons a livré </p>
+
+    }
+    <div>
+        @Html.ActionLink("Retourner a la liste", "Index")
+    </div>

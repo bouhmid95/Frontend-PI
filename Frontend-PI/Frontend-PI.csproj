@@ -182,7 +182,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommandeController.cs" />
+
     <Compile Include="Controllers\DeliveryManController.cs" />
+
+    <Compile Include="Controllers\CommentController.cs" />
+
     <Compile Include="Controllers\FeedBackController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -192,6 +196,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Commande.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
@@ -267,10 +272,24 @@
     <Content Include="Views\User\ConfirmUser.cshtml" />
     <Content Include="Views\User\UpdatePassword.cshtml" />
     <Content Include="Views\User\ResetPassword.cshtml" />
+
     <Content Include="Views\DeliveryMan\index.cshtml" />
     <Content Include="Views\DeliveryMan\Edit.cshtml" />
     <Content Include="Views\DeliveryMan\Create.cshtml" />
     <Content Include="Views\DeliveryMan\CommandeByDeliveryMan.cshtml" />
+
+    <Content Include="Views\User\UpdateUser.cshtml" />
+    <Content Include="Views\Publication\Index.cshtml" />
+    <Content Include="Views\Publication\Details.cshtml" />
+    <Content Include="Views\Publication\Create.cshtml" />
+    <Content Include="Views\Publication\Delete.cshtml" />
+    <Content Include="Views\Publication\Edit.cshtml" />
+    <Content Include="Views\Comment\Create.cshtml" />
+    <Content Include="Views\Comment\Index.cshtml" />
+    <Content Include="Views\Comment\Details.cshtml" />
+    <Content Include="Views\Comment\Delete.cshtml" />
+    <Content Include="Views\Comment\Edit.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
@@ -281,7 +300,10 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\FeedBack\" />
+
     <Folder Include="Views\Publication\" />
+
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
