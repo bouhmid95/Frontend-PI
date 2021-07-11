@@ -27,43 +27,32 @@ namespace Frontend_PI.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            List<LockUnlockUser> lockUnlockUsers = new List<LockUnlockUser>();
-
-            lockUnlockUsers.Add(new LockUnlockUser("unblocked users", 60));
-            lockUnlockUsers.Add(new LockUnlockUser("blocked users", 40));
-
-          
-
-            ViewBag.DataPoints = JsonConvert.SerializeObject(lockUnlockUsers);
-
+            var APIResponse = httpClient.GetAsync(baseAddress + "findAllUser");
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<User>>().Result;
+                return View(ViewBag.result);
+            }
             return View();
         }
 
         // GET: User/Details/5
         public ActionResult Details(int id)
         {
-            var APIResponse = httpClient.GetAsync(baseAddress + "findUser/10");
+            /* var APIResponse = httpClient.GetAsync(baseAddress + "findUser/"+ id);
 
-            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
-            if (APIResponse.Result.IsSuccessStatusCode)
-            {
-                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<User>().Result;
-                return View(ViewBag.result);
-            }
+             if (APIResponse.Result.IsSuccessStatusCode)
+             {
+                 User user = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                 return View(user);
+             }*/
+
+            User user = getUser(id);
+            if(user!=null)
+                return View(user);
+
             return View();
-
-
-            /*  HttpClient httpClient = new HttpClient();
-              httpClient.BaseAddress = new Uri("http://localhost:8081");
-              httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-              HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
-              if (responseMessage.IsSuccessStatusCode)
-              {
-                  ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
-              }
-              return View();*/
-
         }
 
         // GET: User/Create
@@ -98,7 +87,6 @@ namespace Frontend_PI.Controllers
                 {
                     var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "confirmUser/",
                     user);
-                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                     if (APIResponse.Result.IsSuccessStatusCode)
                     {
                         User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
@@ -237,11 +225,50 @@ namespace Frontend_PI.Controllers
         }
 
         // GET: User/Edit/5
-        /* public ActionResult Edit(int id)
+         public ActionResult Edit(int id,User user)
          {
 
-             return View();
-         }*/
+
+         
+
+            if (user != null && user.username != null)
+            {
+                try
+                {
+                    user.id = id;
+
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updateUser/",
+                    user);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                user = getUser(id);
+                if (user != null)
+                {
+                    user.password = null;
+                    return View(user);
+                }
+
+            }
+            return View();
+        }
 
         // POST: User/UpdateUser
         public ActionResult UpdateUser(User user)
@@ -317,6 +344,68 @@ namespace Frontend_PI.Controllers
             {
                 return View();
             }
+        }
+
+
+
+        // GET: User/userByFirstLastname
+        public ActionResult userByFirstLastname(User user)
+        {
+            if (user.firstName != null || user.lastName != null)
+            {
+                try
+                 {
+                var APIResponse = httpClient.GetAsync(baseAddress + "userByFirstLastname?firstName="+ user.firstName + "&lastName="+ user.lastName);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                    var users = APIResponse.Result.Content.ReadAsAsync<IEnumerable<User>>().Result;
+                    User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (users != null)
+                        {
+                            return View("Index", users);
+                    }
+                }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+        }
+
+
+        // GET: User/statLockUnlockUser
+        public ActionResult statLockUnlockUser()
+        {
+            /*  try
+              {
+                  var APIResponse = httpClient.GetAsync(baseAddress + "statLockUnlockUser");
+                  if (APIResponse.Result.IsSuccessStatusCode)
+                  {
+                      var lockUnlockUsers = APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                      if (lockUnlockUsers != null)
+                      {
+                          return View(lockUnlockUsers);
+                      }
+                  }
+              }
+              catch
+              {
+                  return View();
+              }
+
+          return View();*/
+
+            List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
+
+            dataPoints.Add(new LockUnlockUser("NXP", 14));
+            dataPoints.Add(new LockUnlockUser("Infineon", 10));
+           
+
+            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+
+            return View();
         }
 
 
