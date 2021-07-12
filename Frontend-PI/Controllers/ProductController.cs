@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Frontend_PI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,6 +11,7 @@ namespace Frontend_PI.Controllers
 {
     public class ProductController : Controller
     {
+        List<Product> productList = new List<Product>();
         HttpClient httpClient;
         string baseAddress;
 
@@ -23,6 +25,24 @@ namespace Frontend_PI.Controllers
             
         }
 
+        [HttpPost]
+        public ActionResult Remplissage(int id,int qty)
+        {
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+ "/findProduct/" + id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                Product product = responseMessage.Content.ReadAsAsync<Product>().Result;
+                productList.Add(product);
+
+                string message = "SUCCESS";
+                return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+
+            }
+            string message1 = "Failed";
+            return Json(new { Message = message1, JsonRequestBehavior.AllowGet });
+           
+        }
         // GET: Product
         public ActionResult Index()
         {
