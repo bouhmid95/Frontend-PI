@@ -207,7 +207,6 @@
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
     <Compile Include="Models\FeedBack.cs" />
->>>>>>> origin/master
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LockUnlockUser.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
