@@ -1,4 +1,5 @@
 ﻿using Frontend_PI.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,39 +20,39 @@ namespace Frontend_PI.Controllers
             httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(baseAddress);
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
-            //var _AccessToken = Session[" AccessToken "];
-           // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
+                                                                                                                 //var _AccessToken = Session[" AccessToken "];
+                                                                                                                 // httpClient.DefaultRequestHeaders.Add(" Authorization ", String.Format(" Bearer {0} ", _AccessToken));
         }
         // GET: User
+        // GET: Home
         public ActionResult Index()
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/4").Result;
-            if (responseMessage.IsSuccessStatusCode)
+            var APIResponse = httpClient.GetAsync(baseAddress + "findAllUser");
+            if (APIResponse.Result.IsSuccessStatusCode)
             {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<User>>().Result;
                 return View(ViewBag.result);
             }
             return View();
         }
 
         // GET: User/Details/5
-        public ActionResult Details()
+        public ActionResult Details(int id)
         {
+            /* var APIResponse = httpClient.GetAsync(baseAddress + "findUser/"+ id);
 
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/4").Result;
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
-                return View(ViewBag.result);
-            }
+
+             if (APIResponse.Result.IsSuccessStatusCode)
+             {
+                 User user = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                 return View(user);
+             }*/
+
+            User user = getUser(id);
+            if(user!=null)
+                return View(user);
+
             return View();
-
         }
 
         // GET: User/Create
@@ -69,7 +70,7 @@ namespace Frontend_PI.Controllers
             {
                 var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "addUser/",
                 user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                return RedirectToAction("Index");
+                return RedirectToAction("ConfirmUser");
             }
             catch
             {
@@ -77,32 +78,256 @@ namespace Frontend_PI.Controllers
             }
         }
 
-        // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        // POST: User/ConfirmUser
+        public ActionResult ConfirmUser(User user)
         {
+            if (user.username != null && user.confirmCode != null)
+            {
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "confirmUser/",
+                    user);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
             return View();
         }
 
-        // POST: User/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        // POST: User/LoginUser
+        public ActionResult LoginUser(User user)
         {
-            try
+            if (user.username != null && user.password != null)
             {
-                // TODO: Add update logic here
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "loginUser",
+                    user);
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            Session["Id"] = newUser.id;
+                            Session["FirstName"] = newUser.firstName;
+                            Session["LastName"] = newUser.lastName;
+                            Session["Username"] = newUser.username;
+                            Session["UserRole"] = newUser.userRole;
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return View("LoginFailed");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
+
+        // POST: User/LogoutUser
+        public ActionResult LogoutUser()
+        {
+           
+            Session["Id"] = null;
+            Session["FirstName"] = null;
+            Session["LastName"] = null;
+            Session["Username"] = null;
+            Session["UserRole"] = null;
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
+        // POST: User/ResetPassword
+        public ActionResult ResetPassword(User user)
+        {
+            if (user.username != null)
             {
-                return View();
+                try
+                {
+                    var APIResponse = httpClient.GetAsync(baseAddress + "resetPassword?username=" + user.username
+                    );
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("UpdatePassword");
+                        }
+                        else
+                        {
+                            return View("LoginFailed");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
             }
+            return View();
+        }
+
+
+        // POST: User/UpdatePassword
+        public ActionResult UpdatePassword(User user)
+        {
+            if (user.username != null && user.password != null && user.confirmCode != null)
+            {
+                try
+                {
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updatePassword/",
+                             user);
+
+                    //.ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("LoginFailed");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+
+        }
+
+        // GET: User/Edit/5
+         public ActionResult Edit(int id,User user)
+         {
+
+
+         
+
+            if (user != null && user.username != null)
+            {
+                try
+                {
+                    user.id = id;
+
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updateUser/",
+                    user);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                user = getUser(id);
+                if (user != null)
+                {
+                    user.password = null;
+                    return View(user);
+                }
+
+            }
+            return View();
+        }
+
+        // POST: User/UpdateUser
+        public ActionResult UpdateUser(User user)
+        {
+            if (Session["Id"] == null)
+                return View();
+
+            if (user!=null && user.username != null)
+            {
+                try
+                {
+                    user.id = Int16.Parse(Session["Id"].ToString());
+
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "updateUser/",
+                    user);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                        User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (newUser != null)
+                        {
+                            return RedirectToAction("LoginUser");
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+                    }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                user = getUser(Int16.Parse(Session["Id"].ToString()));
+                if (user != null)
+                {
+                    user.password = null;
+                    return View(user);
+                }
+
+            }
+            return View();
         }
 
         // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            try
+            {
+                var APIResponse = httpClient.DeleteAsync(baseAddress + "deleteUser/" + id
+                ).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                return RedirectToAction("LoginUser");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // POST: User/Delete/5
@@ -120,5 +345,97 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+
+        // GET: User/userByFirstLastname
+        public ActionResult userByFirstLastname(User user)
+        {
+            if (user.firstName != null || user.lastName != null)
+            {
+                try
+                 {
+                var APIResponse = httpClient.GetAsync(baseAddress + "userByFirstLastname?firstName="+ user.firstName + "&lastName="+ user.lastName);
+                    if (APIResponse.Result.IsSuccessStatusCode)
+                    {
+                    var users = APIResponse.Result.Content.ReadAsAsync<IEnumerable<User>>().Result;
+                    User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                        if (users != null)
+                        {
+                            return View("Index", users);
+                    }
+                }
+                }
+                catch
+                {
+                    return View();
+                }
+            }
+            return View();
+        }
+
+
+        // GET: User/statLockUnlockUser
+        public ActionResult statLockUnlockUser()
+        {
+            /*  try
+              {
+                  var APIResponse = httpClient.GetAsync(baseAddress + "statLockUnlockUser");
+                  if (APIResponse.Result.IsSuccessStatusCode)
+                  {
+                      var lockUnlockUsers = APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                      if (lockUnlockUsers != null)
+                      {
+                          return View(lockUnlockUsers);
+                      }
+                  }
+              }
+              catch
+              {
+                  return View();
+              }
+
+          return View();*/
+
+            List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
+
+            dataPoints.Add(new LockUnlockUser("NXP", 14));
+            dataPoints.Add(new LockUnlockUser("Infineon", 10));
+           
+
+            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+
+            return View();
+        }
+
+
+        public User getUser(int idUser)
+        {
+
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findUser/" + idUser);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    User newUser = APIResponse.Result.Content.ReadAsAsync<User>().Result;
+                    if (newUser != null)
+                    {
+                        return newUser;
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            return null; 
+
+
+        }
     }
+
+
+
+
 }

@@ -22,9 +22,11 @@ namespace Frontend_PI.Models
         public bool confirmed { get; set; }
         public int wrongPassword { get; set; }
         public bool blocked { get; set; }
-        public DateTime blockedDate { get; set; }
+
+
+        public string blockedDate { get; set; }
         public bool banned { get; set; }
-        private string userRole { get; set; }
+        public string userRole { get; set; }
 
     }
 }

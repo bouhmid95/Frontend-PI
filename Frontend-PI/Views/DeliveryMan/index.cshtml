@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Frontend_PI.Models.DeliveryMan>
+
+@{
+    ViewBag.Title = "Liste des Livreurs";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <!--@Html.ActionLink("Ajouter", "Create")-->
+    <a class="btn btn-primary" href="DeliveryMan/Create" role="button">Ajouter Livreur</a>
+</p>
+<table class="table table-bordered">
+    <tr class="info">
+        <th>
+            @Html.DisplayNameFor(model => model.firstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.lastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.adresse)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.codePostal)
+        </th>
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.firstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.lastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.adresse)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.codePostal)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                @Html.ActionLink("Commandes affectées", "CommandeByDeliveryMan", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+
