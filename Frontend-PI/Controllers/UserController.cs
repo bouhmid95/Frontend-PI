@@ -39,19 +39,16 @@ namespace Frontend_PI.Controllers
         // GET: User/Details/5
         public ActionResult Details(int id)
         {
-            /* var APIResponse = httpClient.GetAsync(baseAddress + "findUser/"+ id);
-
-
-             if (APIResponse.Result.IsSuccessStatusCode)
-             {
-                 User user = APIResponse.Result.Content.ReadAsAsync<User>().Result;
-                 return View(user);
-             }*/
-
-            User user = getUser(id);
-            if(user!=null)
-                return View(user);
-
+            try
+            {
+                User user = getUser(id);
+                if (user != null)
+                    return View(user);
+            }
+            catch
+            {
+                return View("Error");
+            }
             return View();
         }
 
@@ -74,7 +71,7 @@ namespace Frontend_PI.Controllers
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
 
@@ -102,7 +99,7 @@ namespace Frontend_PI.Controllers
                 }
                 catch
                 {
-                    return View();
+                    return View("Error");
                 }
             }
             return View();
@@ -135,10 +132,14 @@ namespace Frontend_PI.Controllers
                             return View("LoginFailed");
                         }
                     }
+                    else
+                    {
+                        return View("LoginFailed");
+                    }
                 }
                 catch
                 {
-                    return View();
+                    return View("LoginFailed");
                 }
             }
             return View();
