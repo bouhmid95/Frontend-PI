@@ -63,6 +63,7 @@ namespace Frontend_PI.Controllers
                   ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
               }
               return View();*/
+
         }
 
         // GET: Comment/Create
