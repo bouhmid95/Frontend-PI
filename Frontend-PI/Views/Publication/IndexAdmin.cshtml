@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Frontend_PI.Models.Publication>
+
+@{
+    ViewBag.Title = "IndexAdmin";
+}
+
+<h2>IndexAdmin</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.publicationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nbLike)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nbDisLike)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.validated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.image)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.publicationDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nbLike)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.nbDisLike)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.validated)
+        </td>
+        <td>
+            <img src="@Html.DisplayFor(modelItem => item.image)" width="100" height="100" >
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.title)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "DetailsAdmin", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>

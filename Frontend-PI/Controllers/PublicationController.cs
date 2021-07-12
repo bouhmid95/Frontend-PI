@@ -40,6 +40,22 @@ namespace Frontend_PI.Controllers
             return View();
         }
 
+
+        // GET: Publication
+        public ActionResult IndexAdmin()
+        {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findNotValidatedPublications");
+
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<Publication>>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+        }
+
         // GET: Publication/Details/5
         public ActionResult Details(int id)
         {
@@ -65,6 +81,10 @@ namespace Frontend_PI.Controllers
               }
               return View();*/
         }
+        
+
+
+
 
         // GET: Publication/Create
         public ActionResult Create()
@@ -78,6 +98,7 @@ namespace Frontend_PI.Controllers
         {
             try
             {
+                publication.idUser = Convert.ToInt16(Session["id"].ToString());
                 var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "addPublication/",
                 publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");
