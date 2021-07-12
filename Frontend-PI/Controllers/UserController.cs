@@ -67,7 +67,7 @@ namespace Frontend_PI.Controllers
             {
                 var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "addUser/",
                 user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                return RedirectToAction("ConfirmUser");
+                return RedirectToAction("ConfirmUser", user);
             }
             catch
             {
