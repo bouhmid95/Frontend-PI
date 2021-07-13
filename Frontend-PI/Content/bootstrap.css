@@ -6832,3 +6832,7 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+
+.Error {
+    color: red;
+}
