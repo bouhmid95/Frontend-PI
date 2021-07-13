@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Frontend_PI.Models.CommandeDetails>
+
+@{
+    ViewBag.Title = "CommandeDetails";
+}
+
+<h2>CommandeDetails</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Nom du produit
+        </th>
+        <th>
+            Quantité
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Frontend_PI.Controllers.ProductController.show(@item.idProduct)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.qte)
+            </td>
+            <td>
+                <button type="button" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    @Html.ActionLink("Delete", "deleteCommandDetail", new { id = item.idProduct })
+                </button>
+                
+            </td>
+        </tr>
+    }
+</table>
+<center><a href="~/Commande/Create"><button>Confirmer la liste des achats</button></a></center>

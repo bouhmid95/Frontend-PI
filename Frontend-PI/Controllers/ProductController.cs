@@ -12,6 +12,7 @@ namespace Frontend_PI.Controllers
     public class ProductController : Controller
     {
         List<Product> productList = new List<Product>();
+
         HttpClient httpClient;
         string baseAddress;
 
@@ -28,12 +29,25 @@ namespace Frontend_PI.Controllers
         [HttpPost]
         public ActionResult Remplissage(int id,int qty)
         {
+            List<Product> products = (List<Product>)Session["productList"];
+            if (products == null)
+                products = new List<Product>();
+            List<CommandeDetails> commandeDetailsList = (List<CommandeDetails>)Session["commandeDetailsList"];
+            if (commandeDetailsList == null)
+                commandeDetailsList = new List<CommandeDetails>();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+ "findProduct/" + id).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 Product product = responseMessage.Content.ReadAsAsync<Product>().Result;
-                productList.Add(product);
+                products.Add(product);
+                Session["productList"] = products;
+
+                CommandeDetails commandeDetails = new CommandeDetails();
+                commandeDetails.idProduct = id;
+                commandeDetails.qte = qty;
+                commandeDetailsList.Add(commandeDetails);
+                Session["commandeDetailsList"] = commandeDetailsList;
 
                 string message = "SUCCESS";
                 return Json(new { Message = message, JsonRequestBehavior.AllowGet });
@@ -43,8 +57,48 @@ namespace Frontend_PI.Controllers
             return Json(new { Message = message1, JsonRequestBehavior.AllowGet });
            
         }
-        // GET: Product
-        public ActionResult Index()
+
+        public static String show(int id)
+        {
+            String productName = "";
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findProduct/" + id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                Product product = responseMessage.Content.ReadAsAsync<Product>().Result;
+                productName = product.title ;
+            }
+            return productName;
+        }
+
+        public ActionResult deleteCommandDetail(int id)
+        {
+            List<CommandeDetails> commandeDetails = (List<CommandeDetails>)Session["commandeDetailsList"];
+            for(int i=0; i<= commandeDetails.Count - 1 ; i ++)
+            {
+                if (commandeDetails[i].idProduct == id)
+                {
+                    commandeDetails.Remove(commandeDetails[i]);
+                    if (commandeDetails.Count == 0)
+                        break;
+                }
+            }
+            return View("CommandeDetails", commandeDetails);
+
+        }
+
+        public ActionResult CommandeDetails()
+        {
+            List<Product> products = (List<Product>)Session["productList"];
+            List<CommandeDetails>  commandeDetails = (List<CommandeDetails>)Session["commandeDetailsList"];
+
+            return View(commandeDetails);
+        }
+
+            // GET: Product
+            public ActionResult Index()
         {
             HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+ "findAllProduct").Result;
             if (responseMessage.IsSuccessStatusCode)

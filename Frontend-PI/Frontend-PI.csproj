@@ -203,6 +203,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Commande.cs" />
+    <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
@@ -308,11 +309,12 @@
     <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\CommandeDetails.cshtml" />
+    <Content Include="Views\Commande\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
     <Content Include="Views\Commande\Create.cshtml" />
-    <Content Include="Views\Commande\Delete.cshtml" />
     <Content Include="Views\Commande\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
