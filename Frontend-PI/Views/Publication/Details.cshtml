@@ -67,26 +67,10 @@
                                     <p>@Html.DisplayFor(model => model.content)</p>
                                 </div>
                                 <div class="tg-tagsshare">
-                                    <div class="tg-tags">
-                                        <span>Tags:</span>
-                                        <div class="tg-tagholder">
-                                            <a class="tg-tag" href="javascript:void(0);">Wealth</a>
-                                            <a class="tg-tag" href="javascript:void(0);">Profit Making</a>
-                                            <a class="tg-tag" href="javascript:void(0);">Cash</a>
-                                            <a class="tg-tag" href="javascript:void(0);">Planning</a>
-                                        </div>
-                                    </div>
-                                    <div class="tg-socialshare">
-                                        <span>Share:</span>
-                                        <ul class="tg-socialicons">
-                                            <li class="tg-facebook"><a href="javascript:void(0);"><i class="fa fa-facebook"></i></a></li>
-                                            <li class="tg-twitter"><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
-                                            <li class="tg-linkedin"><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
-                                            <li class="tg-googleplus"><a href="javascript:void(0);"><i class="fa fa-google-plus"></i></a></li>
-                                            <li class="tg-rss"><a href="javascript:void(0);"><i class="fa fa-rss"></i></a></li>
-                                            <li class="tg-twitter"><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
-                                            <li class="tg-linkedin"><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
-                                        </ul>
+                                    <div style="text-align:center">
+                                        <a class="tg-btn tg-active" @Html.ActionLink("Like Publication", "LikePublication", new { id = Model.id })</a>
+                                        <a class="tg-btn" style="background-color:red;" @Html.ActionLink("DisLike Publication", "DisLikePublication", new { id = Model.id })</a>
+
                                     </div>
                                 </div>
                                 <div class="tg-authorbox">
@@ -101,7 +85,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a class="tg-btn tg-active" href="javascript:void(0);">View All Books</a>
                                     </div>
                                 </div>
                                 <div class="tg-commentsarea">
