@@ -51,7 +51,7 @@
                                     {
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <article class="tg-post">
-                                                <figure><a href="javascript:void(0);"><img src="@Html.DisplayFor(modelItem => item.image)" alt="image description"></a></figure>
+                                                <figure><a href=#><img src="@Html.DisplayFor(modelItem => item.image)" alt="image description"></a></figure>
                                                 <div class="tg-postcontent">
                                                     <ul class="tg-bookscategories">
                                                         <li><a href="javascript:void(0);">Adventure</a></li>
@@ -59,7 +59,8 @@
                                                     </ul>
                                                     <div class="tg-themetagbox"><span class="tg-themetag">featured</span></div>
                                                     <div class="tg-posttitle">
-                                                        <h3><a href="javascript:void(0);">@Html.DisplayFor(modelItem => item.title)</a></h3>
+                                                        <h3>@Html.ActionLink(@Html.DisplayFor(modelItem => item.title).ToString(), "Details", new { id = item.id })</h3>
+                                                        
                                                     </div>
                                                     <div class="tg-description">
                                                         <p> @Html.DisplayFor(modelItem => item.content) <a href="javascript:(0);"> <br><br>More</a></p>

@@ -1,10 +1,10 @@
 ﻿@model Frontend_PI.Models.User
 
 @{
-    ViewBag.Title = "UpdateUser";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Modification Profil</h2>
+<h2>Edit</h2>
 
 
 @using (Html.BeginForm()) 
@@ -18,7 +18,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })           
+                @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -50,23 +50,33 @@
         <div class="form-group">
             @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
-                
+                @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
             </div>
         </div>
 
+ 
 
 
 
+    
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.blocked, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.blocked)
+                    @Html.ValidationMessageFor(model => model.blocked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
 
+   
 
         <div class="form-group">
             @Html.LabelFor(model => model.userRole, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.userRole, new { htmlAttributes = new { @class = "form-control", disabled = "disabled", @readonly = "readonly" } })
-
+                @Html.EditorFor(model => model.userRole, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.userRole, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -79,7 +89,9 @@
     </div>
 }
 
-
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

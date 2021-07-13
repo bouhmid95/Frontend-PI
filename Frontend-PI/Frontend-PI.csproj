@@ -49,6 +49,12 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -193,12 +199,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Commande.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
     <Compile Include="Models\FeedBack.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LockUnlockUser.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Publication.cs" />
@@ -278,15 +285,22 @@
     <Content Include="Views\Publication\Details.cshtml" />
     <Content Include="Views\Publication\Create.cshtml" />
     <Content Include="Views\Publication\Delete.cshtml" />
-    <Content Include="Views\Publication\Edit.cshtml" />
+    <Content Include="Views\Shared\LoginFailed.cshtml" />
     <Content Include="Views\Comment\Create.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
     <Content Include="Views\Comment\Details.cshtml" />
     <Content Include="Views\Comment\Delete.cshtml" />
     <Content Include="Views\Comment\Edit.cshtml" />
+
     <Content Include="Views\DeliveryMan\AffecterCommande.cshtml" />
     <Content Include="Views\DeliveryMan\AffecterLivreur.cshtml" />
     <Content Include="Views\DeliveryMan\AffecterLivreurExecute.cshtml" />
+
+    <Content Include="Views\Publication\IndexAdmin.cshtml" />
+    <Content Include="Views\Publication\Edit.cshtml" />
+    <Content Include="Views\User\statLockUnlockUser.cshtml" />
+    <Content Include="Views\User\userByFirstLastname.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
