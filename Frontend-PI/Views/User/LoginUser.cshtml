@@ -4,7 +4,9 @@
     ViewBag.Title = "LoginUser";
 }
 
-<h2>LoginUser</h2>
+<h2>
+    Se connecter
+</h2>
 
 
 @using (Html.BeginForm()) 
@@ -35,14 +37,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Se connecter" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Reset Password", "ResetPassword", "User")
+    @Html.ActionLink("Informations de compte oubliées ?", "ResetPassword", "User")
 </div>
 
 @section Scripts {

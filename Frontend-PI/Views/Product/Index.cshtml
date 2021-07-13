@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Frontend_PI.Models.Product>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.publicationDate)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.publicationDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+            <td>
+                <label>Quantity</label>
+                <input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" />
+                <button id=" @Html.DisplayFor(modelItem => item.id)" class="btn btn-primary add-to-list">Add to list</button>
+
+            </td>
+        </tr>
+    }
+
+</table>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+
+
+    $('.add-to-list').on('click', function () {
+
+        var idclicked = $(this).attr('id');
+        var qtyValue = $("#"+idclicked+"qty").val();
+
+        alert(qtyValue);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Remplissage")',
+            data: '{id: ' + JSON.stringify(idclicked) + ',qty:' + JSON.stringify(qtyValue)+'}',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",  
+            success: function (response) {
+                console.log(response);
+                 alert("Data has been added successfully.");  
+                //LoadData();
+            },
+            error: function () {
+                alert("Error while inserting data");
+            }  
+
+
+        })
+
+        //alert(idclicked);
+
+
+    });
+
+</script>
