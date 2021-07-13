@@ -38,10 +38,8 @@ namespace Frontend_PI.Controllers
         // GET: Category/Details/5
         public ActionResult Details(int id)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findCategory/" + id).Result;
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+"/findCategory/" + id).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<Category>().Result;
@@ -77,13 +75,12 @@ namespace Frontend_PI.Controllers
         // GET: Category/Edit/5
         public ActionResult Edit(int id)
         {
-            httpClient.BaseAddress = new Uri("http://localhost:8081");
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findCategory/" + id).Result;
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+"findCategory/" + id).Result;
 
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<Category>().Result;
-                Console.WriteLine(ViewBag.result);
+              
                 return View(ViewBag.result);
             }
 
