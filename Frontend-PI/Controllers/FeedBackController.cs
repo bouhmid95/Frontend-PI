@@ -14,6 +14,19 @@ namespace Frontend_PI.Controllers
         // GET: FeedBack
         public ActionResult Index()
         {
+            List<FeedBack> feedBacks = new List<FeedBack>();
+            HttpClient httpClient = new HttpClient();
+
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListFeedback/").Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
+                feedBacks = ViewBag.result;
+                return View(feedBacks);
+            }
+            //Commande commande = new Commande("AF334F", new DateTime(), "EN COURS", "PAR CARTE", "TUNISIA", "2091");
             return View();
         }
 
@@ -31,20 +44,15 @@ namespace Frontend_PI.Controllers
                 // TODO: Add insert logic here
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri("http://localhost:8081");
-                var response = httpClient.PostAsJsonAsync<FeedBack>("SpringMVC/servlet/addOrder", feedBack).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
 
-                List<Commande> commandes = new List<Commande>();
-                HttpClient http = new HttpClient();
-                httpClient.BaseAddress = new Uri("http://localhost:8081");
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
-                    commandes = ViewBag.result;
+                var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/addOrder", feedBack).Result;
+                int statusCode = (int)response.StatusCode;
+
+                //var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+                if (statusCode == 200)
                     return RedirectToAction("Index");
-                }
-                return RedirectToAction("Index");
+                else
+                    return View();
             }
             catch
             {

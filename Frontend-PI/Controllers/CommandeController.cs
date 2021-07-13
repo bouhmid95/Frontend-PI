@@ -18,9 +18,10 @@ namespace Frontend_PI.Controllers
         {
             List<Commande> commandes = new List<Commande>();
             HttpClient httpClient = new HttpClient();
+            String id = Session["id"].ToString();
             httpClient.BaseAddress = new Uri("http://localhost:8081");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findOrderByUser/"+ id).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
@@ -52,23 +53,28 @@ namespace Frontend_PI.Controllers
                 // TODO: Add insert logic here
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri("http://localhost:8081");
-                var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+                commande.idUser = Convert.ToInt16(Session["id"].ToString());
+                var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/addOrder", commande).Result;
+                int statusCode = (int) response.StatusCode;
 
-                List<Commande> commandes = new List<Commande>();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
-                    commandes = ViewBag.result;
+                //var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+                if (statusCode == 200)
                     return RedirectToAction("Index");
-                }
-                return RedirectToAction("Index");
+                else
+                    return View();
             }
             catch
             {
                 return View();
             }
+            /*	"reference" : "REF 0098",
+	"status" : "En cours",
+	"adresse" : "TUNIS",
+	"typePaiement" : "carte",
+	"codePostal" : "2077",
+	"user" : {
+		"id" : 2
+	}*/
         }
 
         // GET: Commande/Edit/5
