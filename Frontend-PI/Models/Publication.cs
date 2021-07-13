@@ -16,6 +16,7 @@ namespace Frontend_PI.Models
         public string image { get; set; }
         public string title { get; set; }
         public User user { get; set; }
+        public int idUser { get; set; }
 
     }
 }
