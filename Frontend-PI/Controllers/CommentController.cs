@@ -78,6 +78,7 @@ namespace Frontend_PI.Controllers
         {
             try
             {
+                comment.idUser = Convert.ToInt16(Session["id"].ToString());
                 var APIResponse = httpClient.PostAsJsonAsync<Comment>(baseAddress + "addComment/",
                 comment).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                 return RedirectToAction("Index");

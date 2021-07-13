@@ -146,6 +146,57 @@ namespace Frontend_PI.Controllers
             }
         }
 
+
+
+        public ActionResult LikePublication(int id)
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                
+                var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "likePublication",
+                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                
+                return View("Details" , publication);
+                }
+                return View();
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
+
+        public ActionResult DisLikePublication(int id)
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+
+                    var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "DislikePublication",
+                    publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+
+                    return View("Details", publication);
+                }
+                return View();
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
         // GET: Publication/Delete/5
         public ActionResult Delete(int id)
         {

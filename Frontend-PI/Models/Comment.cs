@@ -12,5 +12,6 @@ namespace Frontend_PI.Models
         public DateTime publicationDate { get; set; }
         public Publication publication { get; set; }
         public User user { get; set; }
+        public int idUser { get; set; }
     }
 }
