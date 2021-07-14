@@ -293,6 +293,7 @@
     <Content Include="Views\Comment\Edit.cshtml" />
     <Content Include="Views\Publication\IndexAdmin.cshtml" />
     <Content Include="Views\Publication\Edit.cshtml" />
+    <Content Include="Views\Comment\IndexAdminComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />

@@ -89,6 +89,23 @@ namespace Frontend_PI.Controllers
             }
         }
 
+
+        // GET: Publication
+        public ActionResult IndexAdminComment(int id)
+        {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findCommentsByUser/" + id);
+
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+        }
+
+
         // GET: Comment/Edit/5
         public ActionResult Edit(int id)
         {
