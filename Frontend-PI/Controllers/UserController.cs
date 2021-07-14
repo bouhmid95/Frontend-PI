@@ -402,18 +402,24 @@ namespace Frontend_PI.Controllers
                   {
                     List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
 
-                    var list = APIResponse.Result.Content.ReadAsAsync<IEnumerable<var>>().Result;
-                      if (lockUnlockUsers != null)
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                      if (list != null) 
                       {
-                        foreach(var ockUnlockUser in lockUnlockUsers)
-                        {
 
+                        double sum = 0;
+                        foreach(var ockUnlockUser in list)
+                        {
+                            sum = sum+ockUnlockUser.y;
                         }
 
-                        dataPoints.Add(new LockUnlockUser("NXP", 14));
-                        dataPoints.Add(new LockUnlockUser("Infineon", 10));
+                        foreach (var ockUnlockUser in list)
+                        {
+                            dataPoints.Add(new LockUnlockUser(ockUnlockUser.label, (ockUnlockUser.y / sum)*100));
+                        }
+
+
                         ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
-                        return View(lockUnlockUsers);
+                        return View();
                       }
                   }
               }
