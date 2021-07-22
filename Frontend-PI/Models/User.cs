@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace Frontend_PI.Models
@@ -10,7 +11,8 @@ namespace Frontend_PI.Models
 
 
         public int id { get; set; }
-
+       
+        [DataMember(Name = "prenom")]
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
