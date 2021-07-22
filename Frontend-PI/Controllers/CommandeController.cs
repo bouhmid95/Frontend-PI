@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,6 +14,10 @@ namespace Frontend_PI.Controllers
 {
     public class CommandeController : Controller
     {
+
+        public CommandeController() {
+            ProductController.sumPriceProduct = 0;
+        }
 
         // GET: Commande
         public ActionResult Index()
@@ -44,9 +49,30 @@ namespace Frontend_PI.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<CommandeDetails>>().Result;
+                Session["listProductToDownload"] = ViewBag.result;
                 return View(ViewBag.result);
             }
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult downloadFacture()
+        {
+            List<CommandeDetails> commandeDetails = (List<CommandeDetails>)Session["listProductToDownload"];
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
+            var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/downloadOrderFile", commandeDetails).Result;
+            int statusCode = (int)response.StatusCode;
+            if (statusCode == 200)
+            {
+                String fileTitle = @Session["referenceOrder"].ToString();
+                String fileName = "Order-Report-"+ fileTitle +"-"+ DateTime.Now.ToString("dd_MMMM_yyyy") + ".pdf";
+                System.Diagnostics.Process.Start("D:\\PdfReportRepo\\" + fileName);
+            }
+                return View();
         }
 
         public static String show(String x)
@@ -72,9 +98,14 @@ namespace Frontend_PI.Controllers
                 Random rnd = new Random();
                 int reference = rnd.Next(1, 9999);
                 commande.reference = "REF-" + reference ;
-                commande.status = "PENDING" ;
+                commande.status = "NEW" ;
                 commande.orderDate = DateTime.Now;
                 commande.idUser = Convert.ToInt16(Session["id"].ToString());
+                //USER INFO
+                HttpResponseMessage responseMessageUser = httpClient.GetAsync("SpringMVC/servlet/findUser/" + Convert.ToInt16(Session["id"].ToString())).Result;
+                User userCmd = responseMessageUser.Content.ReadAsAsync<User>().Result;
+                commande.user = userCmd;
+                //
                 var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/addOrder", commande).Result;
 
                 int statusCode = (int) response.StatusCode;

@@ -30,6 +30,30 @@ namespace Frontend_PI.Controllers
             return View();
         }
 
+        public static int rating(int idProduct)
+        {
+            int i = 0;
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+
+                httpClient.BaseAddress = new Uri("http://localhost:8081");
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findListFeedBackByIdProduct/" + idProduct).Result;
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    FeedBack feedBack = responseMessage.Content.ReadAsAsync<FeedBack>().Result;
+                    i = (int)Math.Round(feedBack.rate);
+                }
+            }
+            catch(Exception e)
+            {
+                e.StackTrace.ToString();
+            }
+                return i;
+        }
+
+
         // GET: FeedBack/Details/5
         public ActionResult Details(int id)
         {

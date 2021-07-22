@@ -15,6 +15,9 @@
             Nom du produit
         </th>
         <th>
+            Addition prix
+        </th>
+        <th>
             Quantité
         </th>
         <th>
@@ -26,19 +29,37 @@
     {
         <tr>
             <td>
-                @Frontend_PI.Controllers.ProductController.show(@item.idProduct)
+                @Frontend_PI.Controllers.ProductController.show(@item.idProduct, "name", @item.qte)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.qte)
+                @Frontend_PI.Controllers.ProductController.show(@item.idProduct, "price", @item.qte)<span class="glyphicon glyphicon-usd"></span>
+            </td>
+            <td>
+                <input type="number" value="@item.qte" onclick="updateQte(@item.idProduct,$(this).val())" style="width:80px" />
             </td>
             <td>
                 <button type="button" class="btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-remove"></span>
                     @Html.ActionLink("Delete", "deleteCommandDetail", new { id = item.idProduct })
                 </button>
-                
             </td>
         </tr>
     }
+    <tr>
+        <th id="total" colspan="4" style="color : green">Total :</th>
+        <td>@Frontend_PI.Controllers.ProductController.sumPriceProduct<span class="glyphicon glyphicon-usd"></span></td>
+    </tr>
 </table>
+
 <center><a href="~/Commande/Create"><button>Confirmer la liste des achats</button></a></center>
+<script>
+    function updateQte(idProduct, qty) {
+        var qteToUpdate = localStorage.getItem("qteToUpdate");
+        var url = '@Html.Raw(@Url.Action("updateQte", "Product", new { @id = "idPrd", @qty = "idpqte" }))';
+        //url = url.replace("id", productId);
+        url = url.replace("idPrd", idProduct);
+        url = url.replace("idpqte", qty);
+
+        window.location.href = url;
+    }
+</script>

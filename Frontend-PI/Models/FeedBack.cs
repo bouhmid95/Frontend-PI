@@ -7,8 +7,9 @@ namespace Frontend_PI.Models
 {
     public class FeedBack
     {
-        private float rate { get; set; }
-        private DateTime dateRating { get; set; }
+        public float rate { get; set; }
+        //public DateTime dateRating { get; set; }
+        public int idProduct { get; set; }
 
 
     }
