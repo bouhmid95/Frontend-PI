@@ -298,6 +298,11 @@
     <Content Include="Views\Publication\Edit.cshtml" />
     <Content Include="Views\Publication\DetailsAdmin.cshtml" />
     <Content Include="Views\Comment\IndexAdminComment.cshtml" />
+    <Content Include="Views\User\chart.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\statLockUnlockUser.cshtml" />
+    <Content Include="Views\User\userByFirstLastname.cshtml" />
+    <Content Include="Views\Publication\statpublication.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
