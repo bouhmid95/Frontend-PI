@@ -43,6 +43,21 @@ namespace Frontend_PI.Controllers
             return Json(new { Message = message1, JsonRequestBehavior.AllowGet });
            
         }
+
+        //Get: ProductFront
+
+        public ActionResult AllProducts()
+        {
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "findAllProduct").Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+
+        }
+
         // GET: Product
         public ActionResult Index()
         {

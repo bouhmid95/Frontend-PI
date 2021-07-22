@@ -11,6 +11,8 @@ namespace Frontend_PI.Models
         public String title { get; set; }
         public DateTime publicationDate { get; set; }
         public Category category { get; set; }
+        public float price { get; set; }
+        public String description { get; set; }
 
 
     }
