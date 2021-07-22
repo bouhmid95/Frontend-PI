@@ -41,6 +41,7 @@ namespace Frontend_PI.Controllers
         }
 
 
+
         // GET: Publication
         public ActionResult IndexAdmin()
         {
@@ -81,7 +82,34 @@ namespace Frontend_PI.Controllers
               }
               return View();*/
         }
-        
+
+
+        // GET: Publication/Details/5
+        public ActionResult DetailsAdmin(int id)
+        {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+
+
+            /*  HttpClient httpClient = new HttpClient();
+              httpClient.BaseAddress = new Uri("http://localhost:8081");
+              httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+              HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
+              if (responseMessage.IsSuccessStatusCode)
+              {
+                  ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+              }
+              return View();*/
+        }
+
 
 
 
