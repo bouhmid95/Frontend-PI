@@ -40,31 +40,57 @@
 
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.reference)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.orderDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.typePaiement)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.adresse)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.codePostal)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.id })
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.reference)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.orderDate)
+            </td>
+            @if (item.status == "DELIVERED")
+            {
+                <td style="background-color:aquamarine">
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+            }
+            else
+            {
+                <td style="background-color:red">
+                    @Html.DisplayFor(modelItem => item.status)
+                </td>
+
+            }
+
+
+            <td>
+                @Html.DisplayFor(modelItem => item.typePaiement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.adresse)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.codePostal)
+            </td>
+            @if (item.status == "DELIVERED")
+            {
+        <td>
+
+            
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" color="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </svg>
+
+        </td>}
+            else
+            {
+        <td>
+            @Html.ActionLink("désaffecté", "desaffecte", new { id = item.id })
+          
+
+        </td>
+            }
+
+        </tr>
             }
 
 

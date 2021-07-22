@@ -50,6 +50,9 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+	</Reference>
+    <Reference Include="CaptchaMvc, Version=2.5.0.0, Culture=neutral, PublicKeyToken=fe46ad421dd3b0e6, processorArchitecture=MSIL">
+      <HintPath>..\packages\CaptchaMvc.Mvc5.1.5.0\lib\net45-full\CaptchaMvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -204,6 +207,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Commande.cs" />
+    <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
@@ -223,6 +227,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\sidebar.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -297,7 +302,6 @@
     <Content Include="Views\Publication\Details.cshtml" />
     <Content Include="Views\Publication\Create.cshtml" />
     <Content Include="Views\Publication\Delete.cshtml" />
-    <Content Include="Views\Publication\Edit.cshtml" />
     <Content Include="Views\Shared\LoginFailed.cshtml" />
     <Content Include="Views\Comment\Create.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
@@ -312,11 +316,16 @@
     <Content Include="Views\Stock\Create.cshtml" />
     <Content Include="Views\Stock\Edit.cshtml" />
     <Content Include="Views\Product\AllProducts.cshtml" />
+    <Content Include="Views\Product\CommandeDetails.cshtml" />
+    <Content Include="Views\Commande\Details.cshtml" />
+    <Content Include="Views\Publication\IndexAdmin.cshtml" />
+    <Content Include="Views\Publication\Edit.cshtml" />
+    <Content Include="Views\Publication\DetailsAdmin.cshtml" />
+    <Content Include="Views\Comment\IndexAdminComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
     <Content Include="Views\Commande\Create.cshtml" />
-    <Content Include="Views\Commande\Delete.cshtml" />
     <Content Include="Views\Commande\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>

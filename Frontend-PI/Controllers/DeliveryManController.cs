@@ -23,6 +23,42 @@ namespace Frontend_PI.Controllers
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        public ActionResult AffecterCommande()
+        {
+
+            var resp = httpClient.GetAsync(baseAddress + "ListOrder/");
+            ViewBag.result = resp.Result.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
+            ViewBag.Title = "Liste des Commandes";
+            return View(ViewBag.result);
+       
+        }
+
+        public ActionResult AffecterLivreur( int id,int cp,string refer)
+        {
+            ViewBag.id = id;
+            ViewBag.cp = cp;
+            ViewBag.refer = refer;
+            var resp = httpClient.GetAsync(baseAddress + "dm/");
+            ViewBag.result = resp.Result.Content.ReadAsAsync<IEnumerable<DeliveryMan>>().Result;
+
+            return View(ViewBag.result);
+        }
+
+        public ActionResult AffecterLivreurExecute(int id, int cp, string refer)
+        {
+            ViewBag.id = id;
+            ViewBag.cp = cp;
+            ViewBag.refer = refer; 
+              var resp = httpClient.GetAsync(baseAddress + "dm/optimisationAlgo/"+ cp);
+            ViewBag.result = resp.Result.Content.ReadAsAsync<IEnumerable<DeliveryMan>>().Result;
+            return View(ViewBag.result);
+        }
+
+
+
+
+
+
         // GET: DeliveryMan
         public ActionResult Index()
         {
@@ -70,6 +106,9 @@ namespace Frontend_PI.Controllers
         {
             return View();
         }
+
+     
+     
 
         // POST: DeliveryMan/Create
         [HttpPost]

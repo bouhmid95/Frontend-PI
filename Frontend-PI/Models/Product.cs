@@ -14,6 +14,5 @@ namespace Frontend_PI.Models
         public float price { get; set; }
         public String description { get; set; }
 
-
     }
 }

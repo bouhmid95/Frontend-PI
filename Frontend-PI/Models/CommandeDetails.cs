@@ -5,12 +5,11 @@ using System.Web;
 
 namespace Frontend_PI.Models
 {
-    public class FeedBack
+    public class CommandeDetails
     {
-        public float rate { get; set; }
-        //public DateTime dateRating { get; set; }
+        public int id { get; set; }
         public int idProduct { get; set; }
-
-
+        public int idOrder { get; set; }
+        public int qte { get; set; }
     }
 }
