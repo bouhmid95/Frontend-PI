@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Frontend_PI.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace Frontend_PI.Controllers
 {
@@ -246,5 +247,49 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+        // GET: User/statLockUnlockUser
+        public ActionResult statpublication()
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "statpublications");
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
+
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list != null)
+                    {
+
+                        double sum = 0;
+                        foreach (var ockUnlockUser in list)
+                        {
+                            sum = sum + ockUnlockUser.y;
+                        }
+
+                        foreach (var ockUnlockUser in list)
+                        {
+                            dataPoints.Add(new LockUnlockUser(ockUnlockUser.label, (ockUnlockUser.y / sum) * 100));
+                        }
+
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+                        return View();
+                    }
+                }
+            }
+            catch
+            {
+                return View();
+            }
+
+            return View();
+
+
+
+        }
+
     }
 }
