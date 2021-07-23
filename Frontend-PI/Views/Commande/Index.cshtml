@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Frontend_PI.Models.Commande>
+﻿ @model IEnumerable<Frontend_PI.Models.Commande>
 
 @{
     ViewBag.Title = "Index";
@@ -54,7 +54,7 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id , reference = item.reference }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.id })
         </td>
     </tr>

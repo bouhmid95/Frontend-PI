@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -13,14 +14,20 @@ namespace Frontend_PI.Controllers
 {
     public class CommandeController : Controller
     {
+
+        public CommandeController() {
+            ProductController.sumPriceProduct = 0;
+        }
+
         // GET: Commande
         public ActionResult Index()
         {
             List<Commande> commandes = new List<Commande>();
             HttpClient httpClient = new HttpClient();
+            String id = Session["id"].ToString();
             httpClient.BaseAddress = new Uri("http://localhost:8081");
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findOrderByUser/"+ id).Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
@@ -32,9 +39,45 @@ namespace Frontend_PI.Controllers
         }
 
         // GET: Commande/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, String reference)
         {
+            Session["referenceOrder"] = reference;
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrderDetailsByOrderId/" + id).Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<CommandeDetails>>().Result;
+                Session["listProductToDownload"] = ViewBag.result;
+                return View(ViewBag.result);
+            }
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult downloadFacture()
+        {
+            List<CommandeDetails> commandeDetails = (List<CommandeDetails>)Session["listProductToDownload"];
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
+            var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/downloadOrderFile", commandeDetails).Result;
+            int statusCode = (int)response.StatusCode;
+            if (statusCode == 200)
+            {
+                String fileTitle = @Session["referenceOrder"].ToString();
+                String fileName = "Order-Report-"+ fileTitle +"-"+ DateTime.Now.ToString("dd_MMMM_yyyy") + ".pdf";
+                System.Diagnostics.Process.Start("D:\\PdfReportRepo\\" + fileName);
+            }
+                return View();
+        }
+
+        public static String show(String x)
+        {
+            return "";
         }
 
         // GET: Commande/Create
@@ -52,23 +95,47 @@ namespace Frontend_PI.Controllers
                 // TODO: Add insert logic here
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri("http://localhost:8081");
-                var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+                Random rnd = new Random();
+                int reference = rnd.Next(1, 9999);
+                commande.reference = "REF-" + reference ;
+                commande.status = "NEW" ;
+                commande.orderDate = DateTime.Now;
+                commande.idUser = Convert.ToInt16(Session["id"].ToString());
+                //USER INFO
+                HttpResponseMessage responseMessageUser = httpClient.GetAsync("SpringMVC/servlet/findUser/" + Convert.ToInt16(Session["id"].ToString())).Result;
+                User userCmd = responseMessageUser.Content.ReadAsAsync<User>().Result;
+                commande.user = userCmd;
+                //
+                var response = httpClient.PostAsJsonAsync("SpringMVC/servlet/addOrder", commande).Result;
 
-                List<Commande> commandes = new List<Commande>();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/ListOrder").Result;
-                if (responseMessage.IsSuccessStatusCode)
+                int statusCode = (int) response.StatusCode;
+
+                //var response = httpClient.PostAsJsonAsync<Commande>("SpringMVC/servlet/addOrder", commande).ContinueWith((p) => p.Result.EnsureSuccessStatusCode());
+                if (statusCode == 200)
                 {
-                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
-                    commandes = ViewBag.result;
+                    Commande addedCommand = response.Content.ReadAsAsync<Commande>().Result;
+                    List<CommandeDetails> commandeDetailsList = (List<CommandeDetails>)Session["commandeDetailsList"];
+                    foreach(var commandeDetails in commandeDetailsList){
+                        commandeDetails.idOrder = addedCommand.id ;
+                    }
+                    var resp = httpClient.PostAsJsonAsync("SpringMVC/servlet/addOrderDetails", commandeDetailsList).Result;
                     return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                else
+                    return View();
             }
             catch
             {
                 return View();
             }
+            /*	"reference" : "REF 0098",
+	"status" : "En cours",
+	"adresse" : "TUNIS",
+	"typePaiement" : "carte",
+	"codePostal" : "2077",
+	"user" : {
+		"id" : 2
+	}*/
         }
 
         // GET: Commande/Edit/5
@@ -101,7 +168,6 @@ namespace Frontend_PI.Controllers
         // GET: Commande/Delete/5
         public ActionResult Delete(int id)
         {
-            
             HttpClient httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri("http://localhost:8081");
             httpClient.DeleteAsync("SpringMVC/servlet/deleteOrder/" + id);
