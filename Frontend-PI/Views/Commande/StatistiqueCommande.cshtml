@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Frontend_PI.Models.CountOrderByUser>
+
+@{
+    ViewBag.Title = "StatistiqueCommande";
+}
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+@foreach (var item in Model)
+{
+<script>
+    var firsnameList = [];
+    firsnameList.push('@item.firstNameUser');
+    firsnameList.push('@item.orderNumber');
+</script>
+}
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Task');
+        data.addColumn('number', 'Hours per Day');
+        @foreach (var item in Model)
+        {
+         <text>data.addRow(['@item.firstNameUser', @item.orderNumber])</text>
+        }
+
+        var options = {
+            title: 'Nombre des commandes par utilisateur'
+        };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+    }
+</script>
+
+<div class="container">
+    <div class="row">
+        <div id="piechart" style="width: 900px; height: 500px;"></div>
+    </div>
+</div>
+

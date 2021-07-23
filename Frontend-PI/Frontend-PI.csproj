@@ -214,6 +214,7 @@
     <Compile Include="Models\Commande.cs" />
     <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CountOrderByUser.cs" />
     <Compile Include="Models\AffectationDto.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
@@ -348,8 +349,7 @@
     <Content Include="Views\DeliveryMan\Statistique.cshtml" />
 
     <Content Include="Views\Publication\statpublication.cshtml" />
-
-
+    <Content Include="Views\Commande\StatistiqueCommande.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
