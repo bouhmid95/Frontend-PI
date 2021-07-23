@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Frontend_PI.Models.Commande>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+@using (Html.BeginForm("Index", "DM", FormMethod.Post))
+{
+    <table class="table" id="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.reference)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.orderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.typePaiement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.adresse)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.codePostal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isChecked)
+            </th>
+            <th></th>
+        </tr>
+
+        @for (var i = 0; i < Model.ToList().Count; i++)
+        {
+
+
+
+            <tr>
+                <td>
+                    @Model.ToList().ElementAt(i).reference
+
+                </td>
+                <td>
+                    @Model.ToList().ElementAt(i).orderDate
+
+                </td>
+                <td>
+                    @Model.ToList().ElementAt(i).status
+                </td>
+                <td>
+                    @Model.ToList().ElementAt(i).typePaiement
+
+                </td>
+                <td>
+                    @Model.ToList().ElementAt(i).adresse
+
+                </td>
+                <td>
+                    @Model.ToList().ElementAt(i).codePostal
+
+                </td>
+                <td>
+                   
+                    <input type="checkbox" value="@Model.ToList().ElementAt(i).isChecked" />
+                </td>
+                <td>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <input type="submit" value="enregistrer" />
+}

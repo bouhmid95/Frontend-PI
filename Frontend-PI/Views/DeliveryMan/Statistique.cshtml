@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Frontend_PI.Models.DeliveryManStat>
+
+
+@{
+    ViewBag.Title = "Statistique";
+}
+
+<h2>Statistique Général </h2>
+<h4> </h4>
+<div>
+
+    <a class="btn btn-default" style="float:right" href="/DeliveryMan" role="button">Retourner a la liste</a>
+</div>
+<hr />
+<h3 style="text-decoration:underline;color:darkolivegreen">Statistique des Commandes</h3>
+<table class="table table-bordered">
+    <tr class="bg-info">
+        <th>Total Commandes</th>
+        <th>Total Commandes Livrées</th>
+    </tr>
+    <tr style="background-color:beige">
+        <th>@ViewBag.totalC</th>
+        <th>@ViewBag.totalL</th>
+    </tr>
+
+</table>
+
+<h3 style="text-decoration:underline;color:darkolivegreen">Statistique des livreurs</h3>
+@if (@ViewBag.list != null)
+{
+
+
+    <table class="table">
+        <tr class="bg-info">
+            <th>
+                @Html.DisplayNameFor(model => model.first_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.last_name)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.total_orders)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.orders_delivered)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.taux_affectation)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.taux_livraison)
+            </th>
+
+
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.first_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.last_name)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.total_orders)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.orders_delivered)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.taux_affectation)%
+        </td>
+
+        @if (item.taux_livraison > 60)
+        {
+            <td style="background-color:#b6ff00">
+                @Html.DisplayFor(modelItem => item.taux_livraison)%
+            </td>
+        }
+        else if (item.taux_livraison >= 50 && item.taux_livraison < 60)
+        {
+            <td style="background-color:#e7eee0">
+                @Html.DisplayFor(modelItem => item.taux_livraison)%
+            </td>
+        }
+        else
+        {
+            <td style="background-color: #f7a5a5">
+                @Html.DisplayFor(modelItem => item.taux_livraison)%
+            </td>
+        }
+
+
+
+
+    </tr>
+        }
+
+
+    </table>
+
+}
+<style>
+    #cercle {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+    }
+</style>
+<hr /> <strong style="float:left;text-decoration:underline">Légende du couleur</strong> &nbsp&nbsp&nbsp
+       <div class="row">
+           Bon  : <div id="cercle" style="background-color:#b6ff00"></div>
+           &nbsp&nbsp&nbsp
+           Moyen : <div id="cercle" style="background-color:#e7eee0"></div>
+           &nbsp&nbsp&nbsp
+           Mauvais : <div id="cercle" style="background-color:#f7a5a5"></div>
+
+       </div>
+
