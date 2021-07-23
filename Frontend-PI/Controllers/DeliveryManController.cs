@@ -1,4 +1,5 @@
 ﻿using Frontend_PI.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Web.Script.Serialization;
 
 namespace Frontend_PI.Controllers
 {
@@ -33,6 +34,47 @@ namespace Frontend_PI.Controllers
        
         }
 
+        public ActionResult Statistique()
+        {
+            int nbCommande = 0;
+            int commandeLivre = 0;
+            List<Commande> listCommande;
+            var resp = httpClient.GetAsync(baseAddress + "ListOrder/");
+            listCommande = (List<Commande>)resp.Result.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
+            if (listCommande != null)
+            {
+                nbCommande = listCommande.Count();
+
+                foreach(Commande elm in listCommande)
+                {
+                    if (elm.status == "DELIVERED")
+                        commandeLivre = commandeLivre + 1;
+                }
+            }
+            var respStat = httpClient.GetAsync(baseAddress + "dm/getAllDeliveryManStat/");
+
+            List<DeliveryManStat> listDeliveryManStat = (List<DeliveryManStat>)respStat.Result.Content.ReadAsAsync<IEnumerable<DeliveryManStat>>().Result;
+            if (listDeliveryManStat != null)
+            {
+              
+
+                foreach (DeliveryManStat elm in listDeliveryManStat)
+                {
+                    //ici
+                      if(commandeLivre!=0)
+                      elm.taux_livraison = elm.orders_delivered*100/ elm.total_orders;
+
+                    if (nbCommande != 0)
+                        elm.taux_affectation = elm.total_orders * 100 / nbCommande;
+
+                }
+                ViewBag.totalC = nbCommande;
+                ViewBag.totalL = commandeLivre;
+                ViewBag.list = listDeliveryManStat;
+            }
+            return View(ViewBag.list);
+        }
+
         public ActionResult AffecterLivreur( int id,int cp,string refer)
         {
             ViewBag.id = id;
@@ -44,6 +86,59 @@ namespace Frontend_PI.Controllers
             return View(ViewBag.result);
         }
 
+        [HttpPost]
+        public ActionResult AffecterCommandeLivreur(int idCommande, int idLivreur)
+        {
+            // Commande c;
+            // AffectationDto affect = new AffectationDto();
+            // var resp = httpClient.GetAsync(baseAddress + "/findOrderById/"+cId);
+
+            // c = resp.Result.Content.ReadAsAsync<Commande>().Result;
+
+            // List<Commande> list = new List<Commande>();
+            // list.Add(c);
+            // affect.orders = list;
+            // affect.idDeliveryMan = idLivreur;
+            // string json = JsonConvert.SerializeObject(affect);
+
+
+
+            //var httpWebRequest = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(baseAddress + "dm/affectOrdersToDeliveryMan/");
+            // httpWebRequest.ContentType = "application/json";
+            // httpWebRequest.Method = "POST";
+
+
+            // using (var streamWriter = new System.IO.StreamWriter(httpWebRequest.GetRequestStream()))
+            // {
+
+            //    streamWriter.Write(json);
+            // }
+
+            // var httpResponse = (System.Net.HttpWebResponse)httpWebRequest.GetResponse();
+            // using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+            //  {
+            //     
+            // }
+            // var resp2 = httpClient.GetAsync(baseAddress + "dm/getListOrdersByDeliveryManId___Criteria/" + idLivreur);
+            // ViewBag.result = resp2.Result.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
+            // ViewBag.Title = "Liste des Livreurs";
+            // ViewBag.stat = StatByDeliveryMan(idLivreur);
+            // ViewBag.idLivreur = idLivreur;
+            //  ViewBag.idCommande = cId;
+
+
+            //  if (ViewBag.result != null)
+            // {
+            //     return View(ViewBag.result);
+            //  }
+            var resp = httpClient.GetAsync(baseAddress + "dm/affectOrdersToDeliveryMan/" + idLivreur+ "/"+ idCommande);
+              
+
+            return Json(idLivreur, JsonRequestBehavior.AllowGet);
+        }
+
+        
+
         public ActionResult AffecterLivreurExecute(int id, int cp, string refer)
         {
             ViewBag.id = id;
@@ -51,7 +146,12 @@ namespace Frontend_PI.Controllers
             ViewBag.refer = refer; 
               var resp = httpClient.GetAsync(baseAddress + "dm/optimisationAlgo/"+ cp);
             ViewBag.result = resp.Result.Content.ReadAsAsync<IEnumerable<DeliveryMan>>().Result;
-            return View(ViewBag.result);
+
+            if (ViewBag.result != null)
+            {
+                return View(ViewBag.result);
+            }
+            return View();
         }
 
 
@@ -85,6 +185,7 @@ namespace Frontend_PI.Controllers
             ViewBag.result = resp.Result.Content.ReadAsAsync<IEnumerable<Commande>>().Result;
             ViewBag.Title = "Liste des Livreurs";
             ViewBag.stat = StatByDeliveryMan(id);
+            ViewBag.idLivreur = id;
 
             if (ViewBag.result!=null)
             {
@@ -92,6 +193,22 @@ namespace Frontend_PI.Controllers
             }
 
             return View();
+
+        }
+
+        [HttpPost]
+        public ActionResult SupprimerAffectation(int idCommande)
+        {
+
+            var resp = httpClient.GetAsync(baseAddress + "dm/supprimerAffectation/" + idCommande);
+            if (resp != null)
+            {
+                ViewBag.result = resp.Result.Content.ReadAsAsync<Commande>().Result;
+            }
+
+
+              return Json("", JsonRequestBehavior.AllowGet);
+            // return CommandeByDeliveryMan(idLivreur);
 
         }
 
