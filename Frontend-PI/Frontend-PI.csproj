@@ -322,6 +322,7 @@
     <Content Include="Views\User\statLockUnlockUser.cshtml" />
     <Content Include="Views\User\userByFirstLastname.cshtml" />
     <Content Include="Views\Publication\statpublication.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
