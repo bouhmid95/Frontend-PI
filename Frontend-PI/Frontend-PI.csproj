@@ -322,6 +322,7 @@
     <Content Include="Views\Publication\Edit.cshtml" />
     <Content Include="Views\Publication\DetailsAdmin.cshtml" />
     <Content Include="Views\Comment\IndexAdminComment.cshtml" />
+    <Content Include="Views\Product\DisplayCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />

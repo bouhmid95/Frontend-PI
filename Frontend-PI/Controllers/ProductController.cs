@@ -87,16 +87,43 @@ namespace Frontend_PI.Controllers
            
         }
 
+        public ActionResult DisplayCategory(int id)
+        {
+            HttpResponseMessage responseMessageCategory = httpClient.GetAsync(baseAddress + "findCategory/" + id).Result;
+
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "getProductsByCategory/" + id).Result;
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                ViewBag.categoryName = responseMessageCategory.Content.ReadAsAsync<Models.Category>().Result.name;
+                return View(ViewBag.result);
+            }
+            return View();
+        }
+
 
         //Get: ProductFront
 
-        public ActionResult AllProducts()
+        public ActionResult AllProducts(string searchString)
         {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                HttpResponseMessage responseMessageSearch = httpClient.GetAsync(baseAddress + "getProductByTitle/"+ searchString).Result;
+
+                if (responseMessageSearch.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessageSearch.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    return View(ViewBag.result);
+                }
+            }
+            else { 
             HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "findAllProduct").Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
                 return View(ViewBag.result);
+            }
             }
             return View();
 
@@ -287,22 +314,19 @@ namespace Frontend_PI.Controllers
         [HttpPost]
         public ActionResult Edit( Product product, HttpPostedFileBase file)
         {
-            var imageName = product.image;
             try
             {
                 
-                if (file.ContentLength > 0)
+                if ( file !=null &&  file.ContentLength > 0)
                 {
                         product.image = file.FileName;
                         file.SaveAs(Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName));
                 }
-                else
-                {
-                    product.image = imageName;
-                }
 
-                var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct/",
-               product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                // var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct",
+                //product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct",
+                product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 
                 return RedirectToAction("Index");
             }
