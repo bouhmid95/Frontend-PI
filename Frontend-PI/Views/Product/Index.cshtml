@@ -10,7 +10,14 @@
         {
             <div class="col-lg-3 col-md-6 col-sm-12 m-2 ">
                 <div class="card  m-3" style="width: 150px">
-                    <img src="C:\Users\pcs\Pictures\Saved Pictures" width="150px" height="150px" />
+                    @if (String.IsNullOrEmpty(item.image))
+                    {
+                        <img src="~/Content/uploads/avatar.png" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
+                    }
+                    else
+                    {
+                        <img class="card-img-top" src="~/Content/uploads/@Html.DisplayFor(modelItem => item.image)" alt=" @Html.DisplayFor(modelItem => item.title)" />
+                    }
                     <div class="card-body">
                         <h5 class="card-title"> @Html.DisplayFor(modelItem => item.title)</h5>
                         <p class="card-text">@Html.DisplayFor(modelItem => item.title)</p>
@@ -37,7 +44,7 @@
 
                             if (exist)
                             {
-                                <li class="list-group-item glyphicon-align-center glyphicon glyphicon-ok-sign text-success"  style="height:75px">
+                                <li class="list-group-item glyphicon-align-center glyphicon glyphicon-ok-sign text-success" style="height:75px">
                                 </li>
                                 <li class="list-group-item">
                                     <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>

@@ -209,6 +209,7 @@
     <Compile Include="Models\Commande.cs" />
     <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CountOrderByUser.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
     <Compile Include="Models\FeedBack.cs" />
@@ -322,6 +323,7 @@
     <Content Include="Views\Publication\Edit.cshtml" />
     <Content Include="Views\Publication\DetailsAdmin.cshtml" />
     <Content Include="Views\Comment\IndexAdminComment.cshtml" />
+    <Content Include="Views\Commande\StatistiqueCommande.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
