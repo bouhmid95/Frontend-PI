@@ -12,10 +12,10 @@
         <th></th>
     </tr>
     <div class="row">
-        <div class="text-center">
+        <div class="card-group">
             @foreach (var item in Model)
             {
-                <div class="col-lg-3 col-md-6 col-sm-12 m-2 ">
+                <div class="col-lg-3 col-md-6 col-sm-12 m-2">
                     <div class="card  m-3" style="width: 100%">
                         @if (String.IsNullOrEmpty(item.image))
                         {
@@ -43,27 +43,28 @@
                         </ul>
                         <div class="card-body">
                             @{
-                                //List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
-                                //Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
-                                //Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
+                                List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
+                                Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
+                                Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
 
-                                //if (exist)
-                                //{
-                                <span id="rate" style="margin-right: -20px;color:green" class="glyphicon glyphicon-ok-sign"></span>
-                                @*}
-                else
-                {*@
-                                <div class="row align-middle">
-
-                                    <input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" placeholder="Quantity" style="width: 113px;display: inherit;margin-right: 25px;" type="number" />
-
-                                </div>
-                                <div class="row">
-                                    <span id=" @Html.DisplayFor(modelItem => item.id)" style="cursor: pointer;margin-right: 25px;" class="glyphicon glyphicon-shopping-cart add-to-list"></span>
-                                    <span id="rate" style="cursor: pointer;margin-right: 25px;" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
-                                </div>
-                                @*}*@
+                                if (exist)
+                                {
+                                    <li class="list-group-item glyphicon-align-center glyphicon glyphicon-ok-sign text-success" style="height:75px">
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="list-group-item"><p style="font-weight:bold"><input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" placeholder="Quantity" style="width: 113px;display: inherit;margin-right: 25px;" type="number" /></p></li>
+                                    <li class="list-group-item">
+                                        <span id=" @Html.DisplayFor(modelItem => item.id)" style="cursor: pointer;" class="glyphicon glyphicon-shopping-cart add-to-list"></span>
+                                        <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                    </li>
+                                }
                             }
+
                         </div>
                     </div>
                 </div>

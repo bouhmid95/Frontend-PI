@@ -50,7 +50,7 @@
         @Html.ActionLink("Delete", "Delete", new { id = item.id })
     </td>
     <td>
-        @{
+        @*@{
             List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
             Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
             Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
@@ -66,13 +66,12 @@
                 <span id="rate" style="cursor: pointer;margin-right: 25px;" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
 
             }
-        }
+        }*@
     </td>
 </tr>
     }
 
 </table>
-<center><a href="~/Product/CommandeDetails"><button>Valider</button></a></center>
 <!-- Modal -->
 <button data-toggle="modal" data-target="#exampleModal" id="showModalConfirmAdd"></button>
 
