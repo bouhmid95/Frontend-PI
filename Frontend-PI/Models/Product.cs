@@ -13,6 +13,7 @@ namespace Frontend_PI.Models
         public Category category { get; set; }
         public float price { get; set; }
         public String description { get; set; }
+        public String image { get; set; }
 
     }
 }

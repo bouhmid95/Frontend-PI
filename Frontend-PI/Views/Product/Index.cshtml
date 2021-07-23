@@ -14,7 +14,7 @@
         <th>
             @Html.DisplayNameFor(model => model.price)
         </th>
-        <th></th>
+        <th> @Html.DisplayNameFor(model => model.image)</th>
     </tr>
 
     @foreach (var item in Model)
@@ -34,6 +34,15 @@
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.price) <span class="glyphicon glyphicon-usd"></span>
+    </td>
+    <td>
+        @if ( String.IsNullOrEmpty(item.image))
+        {
+            <img src="~/Content/uploads/avatar.png" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
+        }
+        else {
+        <img src="~/Content/uploads/@Html.DisplayFor(modelItem => item.image)" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
+        }
     </td>
     <td>
         @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
