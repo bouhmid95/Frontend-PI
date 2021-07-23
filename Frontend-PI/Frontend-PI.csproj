@@ -198,6 +198,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\PublicationController.cs" />
     <Compile Include="Global.asax.cs">
@@ -208,6 +209,7 @@
     <Compile Include="Models\Commande.cs" />
     <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CountOrderByUser.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
     <Compile Include="Models\FeedBack.cs" />
@@ -311,6 +313,10 @@
     <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Stock\Index.cshtml" />
+    <Content Include="Views\Stock\Create.cshtml" />
+    <Content Include="Views\Stock\Edit.cshtml" />
+    <Content Include="Views\Product\AllProducts.cshtml" />
     <Content Include="Views\Product\CommandeDetails.cshtml" />
     <Content Include="Views\Commande\Details.cshtml" />
     <Content Include="Views\Publication\IndexAdmin.cshtml" />
@@ -322,6 +328,7 @@
     <Content Include="Views\User\statLockUnlockUser.cshtml" />
     <Content Include="Views\User\userByFirstLastname.cshtml" />
     <Content Include="Views\Publication\statpublication.cshtml" />
+    <Content Include="Views\Commande\StatistiqueCommande.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
@@ -330,6 +337,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\uploads\" />
     <Folder Include="Views\FeedBack\" />
   </ItemGroup>
   <ItemGroup>

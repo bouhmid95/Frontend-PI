@@ -10,8 +10,10 @@ namespace Frontend_PI.Models
         public int id { get; set; }
         public String title { get; set; }
         public DateTime publicationDate { get; set; }
+        public Category category { get; set; }
         public float price { get; set; }
-
+        public String description { get; set; }
+        public String image { get; set; }
 
     }
 }
