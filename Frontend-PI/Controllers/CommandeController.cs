@@ -55,6 +55,22 @@ namespace Frontend_PI.Controllers
             return View();
         }
 
+        public ActionResult StatistiqueCommande()
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("http://localhost:8081");
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findOrderNumberForUser").Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<CountOrderByUser>>().Result;
+                List<CountOrderByUser> countOrderByUsers = ViewBag.result;
+                ViewBag.countOrderLst = countOrderByUsers;
+                return View("StatistiqueCommande", countOrderByUsers);
+            }
+            return View("StatistiqueCommande");
+        }
+
         [HttpPost]
         public ActionResult downloadFacture()
         {
