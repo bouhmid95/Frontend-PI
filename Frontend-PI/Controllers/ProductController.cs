@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 namespace Frontend_PI.Controllers
 {
@@ -86,6 +87,23 @@ namespace Frontend_PI.Controllers
            
         }
 
+
+        //Get: ProductFront
+
+        public ActionResult AllProducts()
+        {
+            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "findAllProduct").Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+
+        }
+
+
+       
         public static String show(int id,String type, int qte)
         {
             String productName = "";
@@ -176,6 +194,7 @@ namespace Frontend_PI.Controllers
 
             // GET: Product
             public ActionResult Index()
+
         {
             HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress+ "findAllProduct").Result;
             if (responseMessage.IsSuccessStatusCode)
@@ -219,10 +238,16 @@ namespace Frontend_PI.Controllers
 
         // POST: Product/Create
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product, HttpPostedFileBase file)
         {
             try
             {
+                if (file.ContentLength > 0)
+                    product.image = file.FileName;
+                if (file.ContentLength > 0)
+                {
+                    file.SaveAs(Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName));
+                }
 
                 var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "addProduct/",
                 product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
@@ -260,10 +285,22 @@ namespace Frontend_PI.Controllers
 
         // POST: Product/Edit/5
         [HttpPost]
-        public ActionResult Edit( Product product)
+        public ActionResult Edit( Product product, HttpPostedFileBase file)
         {
+            var imageName = product.image;
             try
             {
+                
+                if (file.ContentLength > 0)
+                {
+                        product.image = file.FileName;
+                        file.SaveAs(Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName));
+                }
+                else
+                {
+                    product.image = imageName;
+                }
+
                 var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct/",
                product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 

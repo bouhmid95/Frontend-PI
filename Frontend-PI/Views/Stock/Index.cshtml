@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Frontend_PI.Models.Stock>
+
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.product)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.qte)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.stockPosition)
+            </th>
+        </tr>
+    
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.product.title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.qte)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.stockPosition)
+        </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+        </td>
+    </tr>
+    }
+    
+    </table>
+
