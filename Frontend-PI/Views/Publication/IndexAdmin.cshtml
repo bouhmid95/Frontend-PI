@@ -9,7 +9,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table-hover table-bordered">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.content)
@@ -36,7 +36,7 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
+    <tr class="table-condensed info">
         <td>
             @Html.DisplayFor(modelItem => item.content)
         </td>

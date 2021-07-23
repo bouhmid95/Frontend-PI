@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 using System.Linq;
 using System.Web;
 
@@ -21,6 +23,9 @@ namespace Frontend_PI.Models
         public String adresse { get; set; }
         [Display(Name = "Code Postal")]
         public String codePostal { get; set; }
+        public int idUser { get; set; }
+        [ForeignKey("user_id")]
+        public User user { get; set; }
 
         public Boolean isChecked {get; set;}
 

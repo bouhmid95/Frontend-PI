@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Frontend_PI.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace Frontend_PI.Controllers
 {
@@ -39,6 +40,7 @@ namespace Frontend_PI.Controllers
             }
             return View();
         }
+
 
 
         // GET: Publication
@@ -81,7 +83,34 @@ namespace Frontend_PI.Controllers
               }
               return View();*/
         }
-        
+
+
+        // GET: Publication/Details/5
+        public ActionResult DetailsAdmin(int id)
+        {
+            var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+
+            //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
+
+            if (APIResponse.Result.IsSuccessStatusCode)
+            {
+                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                return View(ViewBag.result);
+            }
+            return View();
+
+
+            /*  HttpClient httpClient = new HttpClient();
+              httpClient.BaseAddress = new Uri("http://localhost:8081");
+              httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+              HttpResponseMessage responseMessage = httpClient.GetAsync("SpringMVC/servlet/findUser/" + id).Result;
+              if (responseMessage.IsSuccessStatusCode)
+              {
+                  ViewBag.result = responseMessage.Content.ReadAsAsync<User>().Result;
+              }
+              return View();*/
+        }
+
 
 
 
@@ -146,6 +175,57 @@ namespace Frontend_PI.Controllers
             }
         }
 
+
+
+        public ActionResult LikePublication(int id)
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                
+                var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "likePublication",
+                publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                
+                return View("Details" , publication);
+                }
+                return View();
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
+
+        public ActionResult DisLikePublication(int id)
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+
+                    var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "DislikePublication",
+                    publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+
+                    return View("Details", publication);
+                }
+                return View();
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
         // GET: Publication/Delete/5
         public ActionResult Delete(int id)
         {
@@ -167,5 +247,49 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+        // GET: User/statLockUnlockUser
+        public ActionResult statpublication()
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "statpublications");
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                    List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
+
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list != null)
+                    {
+
+                        double sum = 0;
+                        foreach (var ockUnlockUser in list)
+                        {
+                            sum = sum + ockUnlockUser.y;
+                        }
+
+                        foreach (var ockUnlockUser in list)
+                        {
+                            dataPoints.Add(new LockUnlockUser(ockUnlockUser.label, (ockUnlockUser.y / sum) * 100));
+                        }
+
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+                        return View();
+                    }
+                }
+            }
+            catch
+            {
+                return View();
+            }
+
+            return View();
+
+
+
+        }
+
     }
 }

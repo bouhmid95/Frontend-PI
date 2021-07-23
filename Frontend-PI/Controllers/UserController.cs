@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
+using CaptchaMvc.HtmlHelpers;
+
 
 namespace Frontend_PI.Controllers
 {
@@ -65,9 +67,22 @@ namespace Frontend_PI.Controllers
         {
             try
             {
-                var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "addUser/",
-                user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                return RedirectToAction("ConfirmUser", user);
+
+                if (this.IsCaptchaValid("Captcha is not valid"))
+                {
+
+
+
+
+
+
+                    var APIResponse = httpClient.PostAsJsonAsync<User>(baseAddress + "addUser/",
+                    user).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+
+                    return RedirectToAction("ConfirmUser", user);
+                }
+                ViewBag.ErrMessage = "Error: captcha is not valid.";
+                return View();
             }
             catch
             {
@@ -129,17 +144,18 @@ namespace Frontend_PI.Controllers
                         }
                         else
                         {
-                            return View("LoginFailed");
+                            ViewBag.ErrLogin = "Votre pseudo ou le mot de passe est incorrect, veuillez réessayer.";
                         }
                     }
                     else
                     {
-                        return View("LoginFailed");
+                        ViewBag.ErrLogin = "Votre pseudo ou le mot de passe est incorrect, veuillez réessayer.";
                     }
                 }
                 catch
                 {
-                    return View("LoginFailed");
+                    ViewBag.ErrLogin = "Votre pseudo ou le mot de passe est incorrect, veuillez réessayer.";
+                    return View();
                 }
             }
             return View();
@@ -379,15 +395,31 @@ namespace Frontend_PI.Controllers
         // GET: User/statLockUnlockUser
         public ActionResult statLockUnlockUser()
         {
-            /*  try
+             try
               {
                   var APIResponse = httpClient.GetAsync(baseAddress + "statLockUnlockUser");
                   if (APIResponse.Result.IsSuccessStatusCode)
                   {
-                      var lockUnlockUsers = APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
-                      if (lockUnlockUsers != null)
+                    List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
+
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                      if (list != null) 
                       {
-                          return View(lockUnlockUsers);
+
+                        double sum = 0;
+                        foreach(var ockUnlockUser in list)
+                        {
+                            sum = sum+ockUnlockUser.y;
+                        }
+
+                        foreach (var ockUnlockUser in list)
+                        {
+                            dataPoints.Add(new LockUnlockUser(ockUnlockUser.label, (ockUnlockUser.y / sum)*100));
+                        }
+
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
+                        return View();
                       }
                   }
               }
@@ -396,17 +428,10 @@ namespace Frontend_PI.Controllers
                   return View();
               }
 
-          return View();*/
+          return View();
 
-            List<LockUnlockUser> dataPoints = new List<LockUnlockUser>();
 
-            dataPoints.Add(new LockUnlockUser("NXP", 14));
-            dataPoints.Add(new LockUnlockUser("Infineon", 10));
-           
 
-            ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
-
-            return View();
         }
 
 
