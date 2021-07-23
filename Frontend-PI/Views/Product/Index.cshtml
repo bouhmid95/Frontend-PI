@@ -3,75 +3,60 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.publicationDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.price)
-        </th>
-        <th> @Html.DisplayNameFor(model => model.image)</th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.title)
-        <div>
-            @for (int i = 0; i < Frontend_PI.Controllers.FeedBackController.rating(@item.id); i++)
-            {
-                <span class="fa fa-star" style="color: orange"></span>
-            }
-        </div>
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.publicationDate)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.price) <span class="glyphicon glyphicon-usd"></span>
-    </td>
-    <td>
-        @if ( String.IsNullOrEmpty(item.image))
+<div class="row">
+    <div class="text-center">
+        @foreach (var item in Model)
         {
-            <img src="~/Content/uploads/avatar.png" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
-        }
-        else {
-        <img src="~/Content/uploads/@Html.DisplayFor(modelItem => item.image)" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
-        }
-    </td>
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
-        @Html.ActionLink("Details", "Details", new { id = item.id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.id })
-    </td>
-    <td>
-        @{
-            List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
-            Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
-            Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
+            <div class="col-lg-3 col-md-6 col-sm-12 m-2 ">
+                <div class="card  m-3" style="width: 150px">
+                    <img src="C:\Users\pcs\Pictures\Saved Pictures" width="150px" height="150px" />
+                    <div class="card-body">
+                        <h5 class="card-title"> @Html.DisplayFor(modelItem => item.title)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.title)</p>
+                    </div>
+                    <div class="card-header">
+                        @for (int i = 0; i < Frontend_PI.Controllers.FeedBackController.rating(@item.id); i++)
+                        {
+                            <span class="fa fa-star" style="color: orange"></span>
+                        }
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <p style="font-weight:bold">Published at:<br /> @Convert.ToDateTime(item.publicationDate).ToString("dd-MMM-yyyy") </p>
 
-            if (exist)
-            {
-                <span id="rate" style="margin-right: -20px;color:green" class="glyphicon glyphicon-ok-sign"></span>
-            }
-            else
-            {
-                <input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" placeholder="Quantity" style="width: 113px;display: inherit;margin-right: 25px;" type="number" />
-                <span id=" @Html.DisplayFor(modelItem => item.id)" style="cursor: pointer;margin-right: 25px;" class="glyphicon glyphicon-shopping-cart add-to-list"></span>
-                <span id="rate" style="cursor: pointer;margin-right: 25px;" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <p style="font-weight:bold">Price:<br /> @Html.DisplayFor(modelItem => item.price) TND </p>
+                        </li>
+                        <li class="list-group-item"> <p style="font-weight:bold">Category : @Html.DisplayFor(modelItem => item.title)</p></li>
+                        @{
+                            List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
+                            Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
+                            Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
 
-            }
-        }
-    </td>
-</tr>
-    }
+                            if (exist)
+                            {
+                                <li class="list-group-item glyphicon-align-center glyphicon glyphicon-ok-sign text-success"  style="height:75px">
+                                </li>
+                                <li class="list-group-item">
+                                    <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item"><p style="font-weight:bold"><input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" placeholder="Quantity" style="width: 113px;display: inherit;margin-right: 25px;" type="number" /></p></li>
+                                <li class="list-group-item">
+                                    <span id=" @Html.DisplayFor(modelItem => item.id)" style="cursor: pointer;" class="glyphicon glyphicon-shopping-cart add-to-list"></span>
+                                    <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                </li>
+                            }
+                        }
 
-</table>
+                    </ul>
+                </div>
+            </div>}</div></div>
+
 <center><a href="~/Product/CommandeDetails"><button>Valider</button></a></center>
 <!-- Modal -->
 <button data-toggle="modal" data-target="#exampleModal" id="showModalConfirmAdd"></button>
