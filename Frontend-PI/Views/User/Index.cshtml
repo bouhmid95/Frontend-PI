@@ -12,31 +12,25 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.firstName)
+            @Html.DisplayName("Prenom")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.lastName)
+            @Html.DisplayName("Nom")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.email)
+            @Html.DisplayName("Email")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.username)
+            @Html.DisplayName("Nom d'utilisateur")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.confirmed)
+            @Html.DisplayName("Confirmer")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.blocked)
+            @Html.DisplayName("Blocker")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.blockedDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.banned)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.userRole)
+            @Html.DisplayName("Role")
         </th>
         <th></th>
     </tr>
@@ -61,12 +55,6 @@
 
         <td>
             @Html.DisplayFor(modelItem => item.blocked)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.blockedDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.banned)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.userRole)
