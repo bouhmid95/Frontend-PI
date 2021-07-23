@@ -87,17 +87,31 @@ namespace Frontend_PI.Controllers
            
         }
 
-        public ActionResult DisplayCategory(int id)
+        public ActionResult DisplayCategory(int id,string searchString)
         {
-            HttpResponseMessage responseMessageCategory = httpClient.GetAsync(baseAddress + "findCategory/" + id).Result;
-
-            HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "getProductsByCategory/" + id).Result;
-
-            if (responseMessage.IsSuccessStatusCode)
+            if (!String.IsNullOrEmpty(searchString))
             {
-                ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
-                ViewBag.categoryName = responseMessageCategory.Content.ReadAsAsync<Models.Category>().Result.name;
-                return View(ViewBag.result);
+                HttpResponseMessage responseMessageSearch = httpClient.GetAsync(baseAddress + "getProductByTitle/" + searchString).Result;
+
+                if (responseMessageSearch.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessageSearch.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    return View(ViewBag.result);
+                }
+            }
+            else
+            {
+
+                HttpResponseMessage responseMessageCategory = httpClient.GetAsync(baseAddress + "findCategory/" + id).Result;
+
+                HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "getProductsByCategory/" + id).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    ViewBag.categoryName = responseMessageCategory.Content.ReadAsAsync<Models.Category>().Result.name;
+                    return View(ViewBag.result);
+                }
             }
             return View();
         }

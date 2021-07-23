@@ -194,6 +194,7 @@
     <Compile Include="Controllers\CommandeController.cs" />
     <Compile Include="Controllers\DeliveryManController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\DMController.cs" />
     <Compile Include="Controllers\FeedBackController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -205,10 +206,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+
+    <Compile Include="Models\AffectCommande.cs" />
+
     <Compile Include="Models\Category.cs" />
+
     <Compile Include="Models\Commande.cs" />
     <Compile Include="Models\CommandeDetails.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\CountOrderByUser.cs" />
+    <Compile Include="Models\AffectationDto.cs" />
     <Compile Include="Models\DeliveryManStat.cs" />
     <Compile Include="Models\DeliveryMan.cs" />
     <Compile Include="Models\FeedBack.cs" />
@@ -308,6 +315,13 @@
     <Content Include="Views\Comment\Details.cshtml" />
     <Content Include="Views\Comment\Delete.cshtml" />
     <Content Include="Views\Comment\Edit.cshtml" />
+
+    <Content Include="Views\DeliveryMan\AffecterCommande.cshtml" />
+    <Content Include="Views\DeliveryMan\AffecterLivreur.cshtml" />
+    <Content Include="Views\DeliveryMan\AffecterLivreurExecute.cshtml" />
+    <Content Include="Views\DeliveryMan\AffecterCommande.cshtml" />
+    <Content Include="Views\DeliveryMan\AffecterLivreur.cshtml" />
+
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Create.cshtml" />
@@ -318,11 +332,26 @@
     <Content Include="Views\Product\AllProducts.cshtml" />
     <Content Include="Views\Product\CommandeDetails.cshtml" />
     <Content Include="Views\Commande\Details.cshtml" />
+
     <Content Include="Views\Publication\IndexAdmin.cshtml" />
     <Content Include="Views\Publication\Edit.cshtml" />
     <Content Include="Views\Publication\DetailsAdmin.cshtml" />
     <Content Include="Views\Comment\IndexAdminComment.cshtml" />
     <Content Include="Views\Product\DisplayCategory.cshtml" />
+    <Content Include="Views\User\chart.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\statLockUnlockUser.cshtml" />
+    <Content Include="Views\User\userByFirstLastname.cshtml" />
+
+    <Content Include="Views\DeliveryMan\AffecterCommandeLivreur.cshtml" />
+    <Content Include="Views\DM\AffecterCommande.cshtml" />
+    <Content Include="Views\DM\Index.cshtml" />
+    <Content Include="Views\DM\ListAffect.cshtml" />
+    <Content Include="Views\DeliveryMan\Statistique.cshtml" />
+
+    <Content Include="Views\Publication\statpublication.cshtml" />
+    <Content Include="Views\Commande\StatistiqueCommande.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Commande\Index.cshtml" />
