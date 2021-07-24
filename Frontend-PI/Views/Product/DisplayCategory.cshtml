@@ -1,0 +1,330 @@
+﻿@model IEnumerable<Frontend_PI.Models.Product>
+
+
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>
+                <div class="search-input">
+                    Search by title: @Html.TextBox("searchString")
+                </div>
+            </td>
+            <td>
+                <button type="submit"><i class="icon-magnifier"></i></button>
+            </td>
+        </tr>
+    </table>
+
+}
+<div class="row">
+    <h2> Category : @ViewBag.categoryName </h2>
+    <div class="card-group">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-6 col-sm-12 m-2">
+                <div class="card  m-3" style="width: 100%">
+                    @if (String.IsNullOrEmpty(item.image))
+                    {
+                        <img style="height: 200px;" src="~/Content/uploads/avatar.png" alt=" @Html.DisplayFor(modelItem => item.title)" width="150px" height="150px" />
+                    }
+                    else
+                    {
+                        <img style="height: 200px;" class="card-img-top" src="~/Content/uploads/@Html.DisplayFor(modelItem => item.image)" alt=" @Html.DisplayFor(modelItem => item.title)" />
+                    }
+
+
+                    <div class="card-body">
+                        <h5 class="card-title"> @Html.DisplayFor(modelItem => item.title)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.description)</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <p style="font-weight:bold">Published at:<br /> @Convert.ToDateTime(item.publicationDate).ToString("dd-MMM-yyyy") </p>
+
+                        </li>
+                        <li class="list-group-item">
+                            <p style="font-weight:bold">Price:<br /> @Html.DisplayFor(modelItem => item.price) TND </p>
+                        </li>
+                        <li class="list-group-item">
+                            <p style="font-weight:bold">
+                                Category:
+                                @Html.ActionLink(item.category.name, "DisplayCategory", new { id = item.category.id })
+                            </p>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        @{
+                            List<Frontend_PI.Models.CommandeDetails> commandeDetailsSession = (List<Frontend_PI.Models.CommandeDetails>)Session["commandeDetailsList"];
+                            Frontend_PI.Controllers.ProductController p = new Frontend_PI.Controllers.ProductController();
+                            Boolean exist = p.checkIfexistElement(item.id, commandeDetailsSession);
+
+                            if (exist)
+                            {
+                                <li class="list-group-item glyphicon-align-center glyphicon glyphicon-ok-sign text-success" style="height:75px">
+                                </li>
+                                <li class="list-group-item">
+                                    <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item"><p style="font-weight:bold"><input id="@Html.DisplayFor(modelItem => item.id)qty" class="form-control qte" name="qte" placeholder="Quantity" style="width: 113px;display: inherit;margin-right: 25px;" type="number" /></p></li>
+                                <li class="list-group-item">
+                                    <span id=" @Html.DisplayFor(modelItem => item.id)" style="cursor: pointer;" class="glyphicon glyphicon-shopping-cart add-to-list"></span>
+                                    <span id="rate" style="cursor: pointer;margin-left:10px" class="glyphicon glyphicon-star-empty" data-toggle="modal" data-target="#form" onclick="localStorage.setItem('productID', @item.id);"></span>
+                                </li>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="row mt-3 mb-3">
+    <div class="vertical-center">
+        <a href="~/Product/CommandeDetails" class="btn btn-primary">Valider</a>
+    </div>
+</div>
+
+<!-- Modal -->
+<button data-toggle="modal" data-target="#exampleModal" id="showModalConfirmAdd"></button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notification panier</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Votre produit a été ajouté au panier
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal confirm YES NO-->
+<button type="button" id="modalYesNo" style="display:none" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalYesNO"></button>
+
+<div class="modal fade" id="exampleModalYesNO" tabindex="-1" role="dialog" aria-labelledby="exampleModalYesNO" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Produit déjà en panier</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Vous avez déjà ajouté ce produit dans le panier
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="updateQuantity()">Modifer la quantité</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Star-->
+<div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="text-right cross"> <i class="fa fa-times mr-2"></i> </div>
+            <div class="card-body text-center">
+                <img src=" https://i.imgur.com/d2dKtI7.png" height="100" width="100">
+                <div class="comment-box text-center">
+                    <div class="rating">
+                        <input type="radio" name="rating" value="5" id="5"><label for="5" onclick="sendRating(5)">☆</label>
+                        <input type="radio" name="rating" value="4" id="4"><label for="4" onclick="sendRating(4)">☆</label>
+                        <input type="radio" name="rating" value="3" id="3"><label for="3" onclick="sendRating(3)">☆</label>
+                        <input type="radio" name="rating" value="2" id="2"><label for="2" onclick="sendRating(2)">☆</label>
+                        <input type="radio" name="rating" value="1" id="1"><label for="1" onclick="sendRating(1)">☆</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+
+    function updateQuantity() {
+        var existProductId = localStorage.getItem("productIdInList");
+        var qtyProduct = localStorage.getItem("qtyInList");
+
+        var url = '@Html.Raw(@Url.Action("updateQtePanier", "Product", new { @idProduct = "existProductId" }))';
+        url = url.replace("existProductId", existProductId);
+        //window.location.href = url;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("updateQtePanier", "Product", new { @idProduct = "existProductId", @qty = "qtyInLst" })'.replace('existProductId', existProductId),
+            data: "{idProduct: '1'}",
+            dataType: "text",
+            contentType: "text/plain",
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                alert("Error while inserting data");
+            }
+    });
+
+    }
+
+    function sendRating(x) {
+        var productId = localStorage.getItem("productID");
+
+        var url = '@Html.Raw(@Url.Action("AddRating", "Product", new { @ratingVal = "1", @idProduct = "idp" }))';
+        //url = url.replace("id", productId);
+        url = url.replace("1", x);
+        url = url.replace("idp", productId);
+
+        window.location.href = url;
+    }
+
+    $('.add-to-list').on('click', function () {
+
+        var idclicked = $(this).attr('id');
+        var qtyValue = $("#"+idclicked+"qty").val();
+
+        $(this).attr("disabled", "disabled");
+        $(this).css("pointer-events", "none");
+        $("#" + idclicked + "qty").attr("disabled", "disabled");
+
+        //alert(qtyValue);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Remplissage")',
+            data: '{id: ' + JSON.stringify(idclicked) + ',qty:' + JSON.stringify(qtyValue)+'}',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                console.log(response);//respReturn.replace(/"([^"]+)":/g, '$1:');
+                if (response.Message === "SUCCESS") {
+                    //alert('yes');
+                    document.getElementById('showModalConfirmAdd').click();
+                    storage.removeItem('productIdInList');
+                }
+                else {
+                    document.getElementById('modalYesNo').click();
+                    localStorage.setItem('productIdInList', idclicked);
+                    //localStorage.setItem('qtyInList', qtyValue);
+                }
+                 //alert("Data has been added successfully.");
+                //LoadData();
+            },
+            error: function () {
+                alert("Error while inserting data");
+                document.getElementById('exampleModalYesNO').click();
+            }
+
+
+        })
+    });
+
+</script>
+<style>
+    .vertical-center {
+        margin: 0;
+        position: absolute;
+        right: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .cross {
+        padding: 10px;
+        color: #d6312d;
+        cursor: pointer;
+        font-size: 23px
+    }
+
+        .cross i {
+            margin-top: -5px;
+            cursor: pointer
+        }
+
+    .comment-box {
+        padding: 5px
+    }
+
+    .comment-area textarea {
+        resize: none;
+        border: 1px solid #ff0000
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #ffffff;
+        outline: 0;
+        box-shadow: 0 0 0 1px rgb(255, 0, 0) !important
+    }
+
+    .send {
+        color: #fff;
+        background-color: #ff0000;
+        border-color: #ff0000
+    }
+
+        .send:hover {
+            color: #fff;
+            background-color: #f50202;
+            border-color: #f50202
+        }
+
+    .rating {
+        display: inline-flex;
+        margin-top: -10px;
+        flex-direction: row-reverse
+    }
+
+        .rating > input {
+            display: none
+        }
+
+        .rating > label {
+            position: relative;
+            width: 28px;
+            font-size: 35px;
+            color: #ff0000;
+            cursor: pointer
+        }
+
+            .rating > label::before {
+                content: "\2605";
+                position: absolute;
+                opacity: 0
+            }
+
+            .rating > label:hover:before,
+            .rating > label:hover ~ label:before {
+                opacity: 1 !important
+            }
+
+        .rating > input:checked ~ label:before {
+            opacity: 1
+        }
+
+        .rating:hover > input:checked ~ label:before {
+            opacity: 0.4
+        }
+
+    .search-input input {
+        width: 100%;
+    }
+</style>
+
+
+
+

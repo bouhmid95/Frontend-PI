@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Frontend_PI.Controllers
 {
@@ -87,16 +88,57 @@ namespace Frontend_PI.Controllers
            
         }
 
+        public ActionResult DisplayCategory(int id,string searchString)
+        {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                HttpResponseMessage responseMessageSearch = httpClient.GetAsync(baseAddress + "getProductByTitle/" + searchString).Result;
+
+                if (responseMessageSearch.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessageSearch.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    return View(ViewBag.result);
+                }
+            }
+            else
+            {
+
+                HttpResponseMessage responseMessageCategory = httpClient.GetAsync(baseAddress + "findCategory/" + id).Result;
+
+                HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "getProductsByCategory/" + id).Result;
+
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    ViewBag.categoryName = responseMessageCategory.Content.ReadAsAsync<Models.Category>().Result.name;
+                    return View(ViewBag.result);
+                }
+            }
+            return View();
+        }
+
 
         //Get: ProductFront
 
-        public ActionResult AllProducts()
+        public ActionResult AllProducts(string searchString)
         {
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                HttpResponseMessage responseMessageSearch = httpClient.GetAsync(baseAddress + "getProductByTitle/"+ searchString).Result;
+
+                if (responseMessageSearch.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessageSearch.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
+                    return View(ViewBag.result);
+                }
+            }
+            else { 
             HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "findAllProduct").Result;
             if (responseMessage.IsSuccessStatusCode)
             {
                 ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Models.Product>>().Result;
                 return View(ViewBag.result);
+            }
             }
             return View();
 
@@ -290,22 +332,19 @@ namespace Frontend_PI.Controllers
         [HttpPost]
         public ActionResult Edit( Product product, HttpPostedFileBase file)
         {
-            var imageName = product.image;
             try
             {
                 
-                if (file.ContentLength > 0)
+                if ( file !=null &&  file.ContentLength > 0)
                 {
                         product.image = file.FileName;
                         file.SaveAs(Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName));
                 }
-                else
-                {
-                    product.image = imageName;
-                }
 
-                var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct/",
-               product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                // var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct",
+                //product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                var APIResponse = httpClient.PostAsJsonAsync<Product>(baseAddress + "updateProduct",
+                product).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 
                 return RedirectToAction("Index");
             }
@@ -341,5 +380,80 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+        public ActionResult statNombreProductByCategory()
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "nombreProductByCategoryList");
+                var APIResponse1 = httpClient.GetAsync(baseAddress + "productsOrderByQte");
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                   
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list != null)
+                    {
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(list);
+                       
+                    }
+                }
+                if (APIResponse1.Result.IsSuccessStatusCode)
+                {
+
+                    List<LockUnlockUser> list1 = (List<LockUnlockUser>)APIResponse1.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list1 != null)
+                    {
+
+                        ViewBag.DataPoint = JsonConvert.SerializeObject(list1);
+
+                    }
+                }
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+
+
+        }
+
+        public ActionResult statProductsByStock()
+        {
+            try
+            {
+                
+                var APIResponse1 = httpClient.GetAsync(baseAddress + "productsOrderByQte");
+               
+                if (APIResponse1.Result.IsSuccessStatusCode)
+                {
+
+                    List<LockUnlockUser> list1 = (List<LockUnlockUser>)APIResponse1.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list1 != null)
+                    {
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(list1);
+                        return View();
+
+                    }
+                }
+                
+            }
+            catch
+            {
+                return View();
+            }
+
+            return View();
+
+
+
+        }
+
+
     }
+
+   
 }

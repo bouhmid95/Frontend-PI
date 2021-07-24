@@ -1,0 +1,50 @@
+﻿<script type="text/javascript">
+
+	window.onload = function () {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+
+            title: {
+                text: "Nomber of products by category"
+            },
+            axisX: {
+                interval: 1,
+                title: "Categories"
+            },
+            axisY2: {
+                interval: 1,
+                interlacedColor: "rgba(1,77,101,.2)",
+                gridColor: "rgba(1,77,101,.1)",
+                title: "Number of Products"
+            },
+            data: [{
+                type: "bar",
+                name: "companies",
+                axisYType: "secondary",
+                color: "#014D65",
+                dataPoints: 
+                    @Html.Raw(ViewBag.DataPoints)
+                
+            }]
+        });
+        chart.render();
+
+      
+
+
+	}
+</script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+<div class="container">
+    <div class="row">
+        <div id="chartContainer" style="height: 500px; width: 100%;" class="mt-3 mb-3"></div>
+    </div>
+</div>
+
+
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>

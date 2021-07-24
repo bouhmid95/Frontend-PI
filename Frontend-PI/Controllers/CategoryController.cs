@@ -96,8 +96,6 @@ namespace Frontend_PI.Controllers
                 var APIResponse = httpClient.PostAsJsonAsync<Category>(baseAddress + "updateCategory/",
                 category).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 
-
-
                 return RedirectToAction("Index");
 
             
