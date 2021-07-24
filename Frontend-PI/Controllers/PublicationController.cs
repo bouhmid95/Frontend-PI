@@ -135,12 +135,11 @@ namespace Frontend_PI.Controllers
         public ActionResult Create(Publication publication,HttpPostedFileBase file)
         {
             try
-            {
-                //publication.image = file.filename;
-                //if (file.contentlength > 0)
+            {                
+                //if (file.ContentLength > 0)
                 //{
-                //    var path = path.combine(server.mappath("~/content/uploads/"), file.filename);
-                //    file.saveas(path);
+                //        publication.image = file.FileName;
+                //        file.SaveAs(Path.Combine(Server.MapPath("~/Content/Uploads/Publication"), file.FileName));
                 //}
                 publication.idUser = Convert.ToInt16(Session["id"].ToString());
                 var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "addPublication/",
