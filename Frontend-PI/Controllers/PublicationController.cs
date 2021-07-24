@@ -64,7 +64,7 @@ namespace Frontend_PI.Controllers
         {
             var idUser = Convert.ToInt16(Session["id"].ToString());
             var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
-            var APIResponse2 = httpClient.GetAsync(baseAddress + "findAllComments/");
+            var APIResponse2 = httpClient.GetAsync(baseAddress + "findCommentsByPublicationId/" + id);
 
             //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
@@ -197,16 +197,19 @@ namespace Frontend_PI.Controllers
             try
             {
                 var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                var APIResponse3 = httpClient.GetAsync(baseAddress + "findCommentsByPublicationId/" + id);
+
                 if (APIResponse.Result.IsSuccessStatusCode)
                 {
                     Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
                 
                 var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "likePublication",
                 publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                
-                return View("Details" , publication);
+                    ViewBag.comments = APIResponse3.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
+
+                    return View("Details" , publication);
                 }
-                return View();
+                return View("Index");
 
             }
             catch
@@ -222,13 +225,14 @@ namespace Frontend_PI.Controllers
             try
             {
                 var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+                var APIResponse3 = httpClient.GetAsync(baseAddress + "findCommentsByPublicationId/" + id);
                 if (APIResponse.Result.IsSuccessStatusCode)
                 {
                     Publication publication = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
 
                     var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "DislikePublication",
                     publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-
+                    ViewBag.comments = APIResponse3.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
                     return View("Details", publication);
                 }
                 return View();

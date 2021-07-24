@@ -7,6 +7,7 @@
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
 
+
     $(document).ready(function () {
 
 
@@ -140,23 +141,50 @@
                                         </div>
                                     </div>
                                 </div>
-                                @foreach (var item in @ViewBag.comments)
-                                {
-                                    @item.content
-                                }
+                                <div class="tg-commentsarea">
+                                    <ul id="tg-comments" class="tg-comments">
+                                        @foreach (var item in @ViewBag.comments)
+                                        {
+                                            <li>
+                                                <div class="tg-authorbox">
+                                                    <figure class="tg-authorimg">
+                                                        <img src="~/Content/images/author/imag-24.jpg" alt="image description">
+                                                    </figure>
+                                                    <div class="tg-authorinfo">
+                                                        <div class="tg-authorhead">
+                                                            <div class="tg-leftarea">
+                                                                <div class="tg-authorname">
+                                                                    <h2>@item.user.firstName @item.user.lastName</h2>
+                                                                    <span>Publication Date : @item.publicationDate.ToString("dd/MM/yyyy")</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tg-rightarea">
+                                                                <a class="tg-btnreply" href="javascript:void(0);">Reply<i class="fa fa-mail-reply"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tg-description">
+                                                            <p>@item.content</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tg-bottomarrow"></div>
+                                                </div>
+                                            </li>
+                                        }
+</div>
                                 <div class="tg-leaveyourcomment">
                                     <div class="tg-sectionhead">
                                         <h2>Leave Your Comment</h2>
                                     </div>
                                     <form class="tg-formtheme tg-formleavecomment">
                                         <fieldset>
-                                            <div class="form-group">
+                                            <div class="form-group" style="100%">
                                                 <textarea placeholder="Comment" id="comment"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <a class="tg-btn tg-active" id="valider" href="javascript:void(0);">Submit</a>
                                             </div>
                                         </fieldset>
+                                        
                                     </form>
                                 </div>
                             </div>
@@ -164,7 +192,7 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 pull-left">
-                        <aside id="tg-sidebar" class="tg-sidebar">
+                        <aside id="tg-sidebar" class="tg-sidebar"> 
                             <div class="tg-widget tg-catagories">
                                 <div class="tg-widgettitle">
                                     <h3>Categories</h3>
