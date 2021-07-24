@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Frontend_PI.Controllers
 {
@@ -376,5 +377,80 @@ namespace Frontend_PI.Controllers
                 return View();
             }
         }
+
+
+        public ActionResult statNombreProductByCategory()
+        {
+            try
+            {
+                var APIResponse = httpClient.GetAsync(baseAddress + "nombreProductByCategoryList");
+                var APIResponse1 = httpClient.GetAsync(baseAddress + "productsOrderByQte");
+                if (APIResponse.Result.IsSuccessStatusCode)
+                {
+                   
+                    List<LockUnlockUser> list = (List<LockUnlockUser>)APIResponse.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list != null)
+                    {
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(list);
+                       
+                    }
+                }
+                if (APIResponse1.Result.IsSuccessStatusCode)
+                {
+
+                    List<LockUnlockUser> list1 = (List<LockUnlockUser>)APIResponse1.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list1 != null)
+                    {
+
+                        ViewBag.DataPoint = JsonConvert.SerializeObject(list1);
+
+                    }
+                }
+                return View();
+            }
+            catch
+            {
+                return View();
+            }
+
+
+        }
+
+        public ActionResult statProductsByStock()
+        {
+            try
+            {
+                
+                var APIResponse1 = httpClient.GetAsync(baseAddress + "productsOrderByQte");
+               
+                if (APIResponse1.Result.IsSuccessStatusCode)
+                {
+
+                    List<LockUnlockUser> list1 = (List<LockUnlockUser>)APIResponse1.Result.Content.ReadAsAsync<IEnumerable<LockUnlockUser>>().Result;
+                    if (list1 != null)
+                    {
+
+                        ViewBag.DataPoints = JsonConvert.SerializeObject(list1);
+                        return View();
+
+                    }
+                }
+                
+            }
+            catch
+            {
+                return View();
+            }
+
+            return View();
+
+
+
+        }
+
+
     }
+
+   
 }
