@@ -74,19 +74,21 @@ namespace Frontend_PI.Controllers
 
         // POST: Comment/Create
         [HttpPost]
-        public ActionResult Create(Comment comment)
+        public ActionResult Create(string comment , int idpublication)
         {
             try
             {
-                comment.idUser = Convert.ToInt16(Session["id"].ToString());
-                var APIResponse = httpClient.PostAsJsonAsync<Comment>(baseAddress + "addComment/",
-                comment).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
-                return RedirectToAction("Index");
+                var idUser = Convert.ToInt16(Session["id"].ToString());
+
+
+                var resp = httpClient.GetAsync(baseAddress + "addComment/" + comment + "/" + idpublication + "/" + idUser);
+                var res = resp.Result.Content.ReadAsAsync<Comment>().Result;
             }
             catch
             {
-                return View();
+                return Json("true", JsonRequestBehavior.AllowGet);
             }
+            return null;
         }
 
 

@@ -189,7 +189,7 @@ namespace Frontend_PI.Controllers
             var APIResponse = httpClient.PostAsJsonAsync<FeedBack>(baseAddress + "addFeedback/",
                feed).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
 
-            return RedirectToAction("Index", "Product");
+            return RedirectToAction("AllProducts", "Product");
         }
 
         public ActionResult deleteCommandDetail(int id)
@@ -221,9 +221,12 @@ namespace Frontend_PI.Controllers
 
         public ActionResult CommandeDetails()
         {
-            List<Product> products = (List<Product>)Session["productList"];
-            List<CommandeDetails>  commandeDetails = (List<CommandeDetails>)Session["commandeDetailsList"];
-
+            List<CommandeDetails> commandeDetails = new List<CommandeDetails>();
+            if (Session["commandeDetailsList"] != null)
+            {
+                List<Product> products = (List<Product>)Session["productList"];
+                commandeDetails = (List<CommandeDetails>)Session["commandeDetailsList"];
+            }
             return View(commandeDetails);
         }
 

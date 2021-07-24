@@ -1,1 +1,37 @@
-﻿<h1>test</h1>
+﻿@model IEnumerable<Frontend_PI.Models.Comment>
+
+@{
+    ViewBag.Title = "IndexAdminComment";
+}
+
+@foreach (var item in Model)
+{
+    <div class="tg-commentsarea">
+        <ul id="tg-comments" class="tg-comments">
+            <li>
+                <div class="tg-authorbox">
+                    <figure class="tg-authorimg">
+                        <img src="~/Content/images/author/imag-24.jpg" alt="image description">
+                    </figure>
+                    <div class="tg-authorinfo">
+                        <div class="tg-authorhead">
+                            <div class="tg-leftarea">
+                                <div class="tg-authorname">
+                                    <h2>@Html.DisplayFor(modelItem => item.user.firstName) @Html.DisplayFor(modelItem => item.user.lastName)</h2>
+                                    <span>Author Since: June 27, 2017</span>
+                                </div>
+                            </div>
+                            <div class="tg-rightarea">
+                                <a class="tg-btnreply" href="javascript:void(0);">Reply<i class="fa fa-mail-reply"></i></a>
+                            </div>
+                        </div>
+                        <div class="tg-description">
+                            <p> @Html.DisplayFor(modelItem => item.content)</p>
+                        </div>
+                    </div>
+                    <div class="tg-bottomarrow"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+}
