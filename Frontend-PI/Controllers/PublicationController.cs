@@ -7,6 +7,7 @@ using Frontend_PI.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Frontend_PI.Controllers
 {
@@ -61,16 +62,24 @@ namespace Frontend_PI.Controllers
         // GET: Publication/Details/5
         public ActionResult Details(int id)
         {
+            var idUser = Convert.ToInt16(Session["id"].ToString());
             var APIResponse = httpClient.GetAsync(baseAddress + "findPublication/" + id);
+            var APIResponse2 = httpClient.GetAsync(baseAddress + "findAllComments/");
 
             //HttpResponseMessage responseMessage = httpClient.GetAsync("findUser/6").Result;
 
             if (APIResponse.Result.IsSuccessStatusCode)
             {
-                ViewBag.result = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
-                return View(ViewBag.result);
+                Publication pub = APIResponse.Result.Content.ReadAsAsync<Publication>().Result;
+                ViewBag.result = pub;
+                ViewBag.idp = pub.id;
+               // return View(ViewBag.result);
             }
-            return View();
+            if (APIResponse2.Result.IsSuccessStatusCode)
+            {
+                ViewBag.comments = APIResponse2.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
+            }
+            return View(ViewBag.result);
 
 
             /*  HttpClient httpClient = new HttpClient();
@@ -123,10 +132,16 @@ namespace Frontend_PI.Controllers
 
         // POST: Publication/Create
         [HttpPost]
-        public ActionResult Create(Publication publication)
+        public ActionResult Create(Publication publication,HttpPostedFileBase file)
         {
             try
             {
+                //publication.image = file.filename;
+                //if (file.contentlength > 0)
+                //{
+                //    var path = path.combine(server.mappath("~/content/uploads/"), file.filename);
+                //    file.saveas(path);
+                //}
                 publication.idUser = Convert.ToInt16(Session["id"].ToString());
                 var APIResponse = httpClient.PostAsJsonAsync<Publication>(baseAddress + "addPublication/",
                 publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
@@ -289,6 +304,22 @@ namespace Frontend_PI.Controllers
 
 
 
+        }
+
+        [HttpPost]
+        public ActionResult CreateComment(Comment comment)
+        {
+            try
+            {
+                comment.idUser = Convert.ToInt16(Session["id"].ToString());
+                var APIResponse = httpClient.PostAsJsonAsync<Comment>(baseAddress + "addComment/",
+                comment).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
     }
