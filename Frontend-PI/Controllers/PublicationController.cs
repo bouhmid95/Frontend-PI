@@ -206,7 +206,6 @@ namespace Frontend_PI.Controllers
                 var APIResponse2 = httpClient.PostAsJsonAsync<Publication>(baseAddress + "likePublication",
                 publication).ContinueWith(postTask => postTask.Result.EnsureSuccessStatusCode());
                     ViewBag.comments = APIResponse3.Result.Content.ReadAsAsync<IEnumerable<Comment>>().Result;
-
                     return View("Details" , publication);
                 }
                 return View("Index");
@@ -324,6 +323,32 @@ namespace Frontend_PI.Controllers
             {
                 return View();
             }
+        }
+
+
+        public ActionResult allPublications(string searchString)
+        {
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+                HttpResponseMessage responseMessageSearch = httpClient.GetAsync(baseAddress + "getPublicationByTitle/" + searchString).Result;
+
+                if (responseMessageSearch.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessageSearch.Content.ReadAsAsync<IEnumerable<Publication>>().Result;
+                    return View(ViewBag.result);
+                }
+            //}
+            else
+            {
+                HttpResponseMessage responseMessage = httpClient.GetAsync(baseAddress + "findValidatedPublications").Result;
+                if (responseMessage.IsSuccessStatusCode)
+                {
+                    ViewBag.result = responseMessage.Content.ReadAsAsync<IEnumerable<Publication>>().Result;
+                    return View(ViewBag.result);
+                }
+            }
+            return View();
+
         }
 
     }

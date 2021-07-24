@@ -123,6 +123,7 @@
                                 <div class="tg-tagsshare">
                                     <div style="text-align:center">
                                         <a class="tg-btn tg-active" @Html.ActionLink("Like Publication", "LikePublication", new { id = Model.id })</a>
+
                                         <a class="tg-btn" style="background-color:red;" @Html.ActionLink("DisLike Publication", "DisLikePublication", new { id = Model.id })</a>
 
                                     </div>
@@ -170,7 +171,7 @@
                                                 </div>
                                             </li>
                                         }
-</div>
+                                </div>
                                 <div class="tg-leaveyourcomment">
                                     <div class="tg-sectionhead">
                                         <h2>Leave Your Comment</h2>
@@ -184,7 +185,7 @@
                                                 <a class="tg-btn tg-active" id="valider" href="javascript:void(0);">Submit</a>
                                             </div>
                                         </fieldset>
-                                        
+
                                     </form>
                                 </div>
                             </div>
@@ -192,7 +193,7 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 pull-left">
-                        <aside id="tg-sidebar" class="tg-sidebar"> 
+                        <aside id="tg-sidebar" class="tg-sidebar">
                             <div class="tg-widget tg-catagories">
                                 <div class="tg-widgettitle">
                                     <h3>Categories</h3>
