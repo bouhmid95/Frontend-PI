@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -17,6 +18,18 @@ namespace Frontend_PI.Models
         public string title { get; set; }
         public User user { get; set; }
         public int idUser { get; set; }
+        [Display(Name = "content")]
+        public string contentTrimmed
+        {
+            get
+            {
+                if (this.content.Length > 75)
+                    return this.content.Substring(0, 75) + "...";
+                else
+                    return this.content;
+            }
+        }
+
 
     }
 }
